@@ -1,0 +1,56 @@
+.single-movie{
+min-height:100vh;
+background:#0f172a;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:40px 20px;
+text-align:center;
+}
+
+.single-movie img{
+width:320px;
+max-width:90%;
+border-radius:12px;
+margin-bottom:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
+transition:0.3s;
+}
+
+.single-movie img:hover{
+transform:scale(1.05);
+}
+
+.single-movie h1{
+font-size:32px;
+margin-bottom:15px;
+font-weight:700;
+}
+
+.single-movie p{
+max-width:700px;
+line-height:1.6;
+font-size:16px;
+margin-bottom:12px;
+color:#cbd5f5;
+}
+
+.single-movie p:nth-of-type(2),
+.single-movie p:nth-of-type(3){
+font-weight:600;
+color:#facc15;
+}
+
+h2{
+text-align:center;
+margin-top:100px;
+font-size:24px;
+color:white;
+}
+.RatingIcon {
+    color: rgb(248, 248, 42);
+    align-items: center;
+}
+
