@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { baseImageUrl } from "../data";
 import "./Home.css";
 import { Link } from "react-router-dom";
+import { BsBookmarkHeartFill } from "react-icons/bs";
+import { MovieContext } from "../Components/Router";
 function Home({ urls, heading, btn1, btn2 }) {
   const [movieData, setMovieData] = useState([]);
   const [showData, setShowData] = useState(urls[0]);
+  let { AddToWatchlist } = useContext(MovieContext);
 
   useEffect(() => {
     async function fetchMovies() {
@@ -12,6 +15,7 @@ function Home({ urls, heading, btn1, btn2 }) {
         const response = await fetch(showData);
         const result = await response.json();
         setMovieData(result.results || []);
+        console.log(result);
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
@@ -66,6 +70,9 @@ function Home({ urls, heading, btn1, btn2 }) {
                       })
                     : ""}
                 </p>
+                 <button onClick={() => AddToWatchlist(item)}>
+                  <BsBookmarkHeartFill /> Add To WatchList</button>
+                
               </div>
             </div>
           ))

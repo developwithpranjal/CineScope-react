@@ -47,9 +47,9 @@ body {
   transition: 0.3s;
 }
 
-.toggle-buttons button:hover .active-btn {
+.toggle-buttons button:hover  {
   background: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 .movie-grid {
@@ -57,7 +57,7 @@ body {
   gap: 20px;
   overflow-x: auto;
   padding: 20px 0;
-  scrollbar-width: none;
+  scrollbar-width:none;
 }
 
 .movie-grid::-webkit-scrollbar {

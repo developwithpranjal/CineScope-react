@@ -1,56 +1,92 @@
 .single-movie{
-min-height:100vh;
+display:flex;
+gap:50px;
+padding:50px;
 background:#0f172a;
 color:white;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-padding:40px 20px;
-text-align:center;
+min-height:100vh;
 }
 
-.single-movie img{
-width:320px;
-max-width:90%;
+.movie-left img{
+width:300px;
 border-radius:12px;
-margin-bottom:25px;
 box-shadow:0 10px 25px rgba(0,0,0,0.6);
-transition:0.3s;
 }
 
-.single-movie img:hover{
-transform:scale(1.05);
+.movie-right{
+flex:1;
 }
 
-.single-movie h1{
-font-size:32px;
-margin-bottom:15px;
-font-weight:700;
+.movie-description{
+background:#1e293b;
+padding:30px;
+border-radius:12px;
 }
-
-.single-movie p{
-max-width:700px;
-line-height:1.6;
-font-size:16px;
-margin-bottom:12px;
-color:#cbd5f5;
+.movie-info span{
+    font-weight:bold ;
+    color:#facc15;
 }
-
-.single-movie p:nth-of-type(2),
-.single-movie p:nth-of-type(3){
+.movie-info p{
+    line-height: 2;
+}
+.movie-info button{
+margin-top:15px;
+padding:10px 18px;
+border:none;
+border-radius:6px;
+color:black;
+cursor:pointer;
 font-weight:600;
-color:#facc15;
+}
+.TrailerBtn{
+    background-color: rgb(17, 142, 252);
+}
+.WatchListBtn{
+    background-color: red;
+}
+.movie-info{
+    display: flex;
+    flex-direction: column;
+}
+.trailer-overlay{
+position:fixed;
+top:10%;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
 }
 
-h2{
-text-align:center;
-margin-top:100px;
-font-size:24px;
-color:white;
-}
-.RatingIcon {
-    color: rgb(248, 248, 42);
-    align-items: center;
+.trailer-box{
+width:80%;
+max-width:900px;
+aspect-ratio:16/9;
+background:black;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.8);
+position:relative;
 }
 
+.trailer-box iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+.close-btn{
+position:absolute;
+top:-10px;
+right:45%;
+background-color: #facc15;
+color: white;
+border:none;
+padding:6px 12px;
+cursor:pointer;
+font-weight:600;
+border-radius:6px;
+}
