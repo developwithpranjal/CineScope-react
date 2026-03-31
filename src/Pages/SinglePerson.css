@@ -1,0 +1,76 @@
+.single-person {
+  padding: 40px;
+  background: #0f172a; 
+  color: #fff;
+  min-height: 100vh;
+}
+
+.person-header {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-bottom: 50px;
+}
+
+.person-header img {
+  width: 250px;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.person-details {
+  max-width: 700px;
+}
+
+.person-details h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.person-details p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  width: 100%;
+}
+
+.person-details b {
+  color: #facc15;
+}
+
+.movies-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.movie-card:hover {
+  transform: scale(1.08);
+}
+
+.movie-card img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.movie-card p {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+}
+
+.movie-card:hover p {
+  color: #fff;
+}

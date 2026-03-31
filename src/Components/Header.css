@@ -1,89 +1,129 @@
-.Header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 40px;
-background:#020617;
-color:white;
-position:sticky;
-top:0;
-z-index:1000;
-box-shadow:0 2px 10px rgba(0,0,0,0.5);
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: #020617;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.logo a{
-display:flex;
-align-items:center;
-gap:8px;
-font-size:24px;
-font-weight:700;
-text-decoration:none;
-color:#facc15;
+.logo a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #facc15;
 }
 
-.logo svg{
-font-size:28px;
+.logo svg {
+  font-size: 28px;
 }
 
-.seacrhBar{
-display:flex;
-align-items:center;
-background:#1e293b;
-border-radius:30px;
-overflow:hidden;
-width:350px;
+.seacrhBar {
+  display: flex;
+  align-items: center;
+  background: #1e293b;
+  border-radius: 30px;
+  overflow: hidden;
+  width: 350px;
 }
 
-.seacrhBar input{
-flex:1;
-padding:8px 12px;
-border:none;
-outline:none;
-background:transparent;
-color:white;
-font-size:14px;
+.seacrhBar input {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 14px;
 }
 
-.seacrhBar input::placeholder{
-color:#94a3b8;
+.seacrhBar input::placeholder {
+  color: #94a3b8;
 }
 
-.Searchbutton{
-border:none;
-background:#facc15;
-color:black;
-padding:8px 12px;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
+.Searchbutton {
+  border: none;
+  background: #facc15;
+  color: black;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.navLinks{
-display:flex;
-gap:20px;
-align-items: center;
-justify-content: center;
+.navLinks {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
-.navLinks a{
-text-decoration:none;
-color:white;
-font-weight:500;
-transition:0.3s;
+.navLinks a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: 0.3s;
 }
 
-.navLinks a:hover{
-    color: #facc15;
+.navLinks a:hover {
+  color: #facc15;
 }
 
-.loginbtn{
-    padding:.5rem 1rem;
-    background-color: #facc15;
-    border-radius: 15px;
-    color: #020617 !important;
-    font-weight: bold !important;
+.loginbtn {
+  padding: 0.5rem 1rem;
+  background-color: #facc15;
+  border-radius: 15px;
+  color: #020617 !important;
+  font-weight: bold !important;
 }
-.loginbtn:hover{
-    background: #c29c03;
+.loginbtn:hover {
+  background: #c29c03;
+}
+.searchbar {
+  position: relative;
+}
+
+.suggestions {
+  position: absolute;
+  top: 80%;
+  left: 33.5%;
+  width: 30%;
+  background: #1c1f2b;
+  border-radius: 10px;
+
+  max-height: 300px;
+  overflow-y: auto;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 10px 14px;
+  color: #ddd;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.suggestion-item:hover {
+  background: #2a2e3f;
+  color: #f5c518;
+}
+
+.suggestions::-webkit-scrollbar {
+  width: 5px;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
 }

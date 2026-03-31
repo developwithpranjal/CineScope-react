@@ -60,6 +60,16 @@ body {
   scrollbar-width:none;
 }
 
+.removebtn{
+  color: rgb(247, 34, 34);
+  position: absolute;
+  top: 1%;
+  right: 2%;
+  font-size:25px ;
+  background-color: rgba(240, 248, 255, 0.664);
+border-radius: 0 10px 0 0 ;
+}
+
 .movie-grid::-webkit-scrollbar {
   display: none;
 }
@@ -80,6 +90,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   margin-bottom: 10px;
+  position: relative;
 }
 
 .content h3 {
@@ -91,3 +102,4 @@ body {
   font-size: 13px;
   color: #94a3b8;
 }
+

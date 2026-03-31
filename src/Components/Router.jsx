@@ -7,6 +7,8 @@ import { urls } from "../data";
 import WatchList from "../Pages/WatchList";
 import Login from "../Pages/Login";
 import { createContext, useState } from "react";
+import SinglePerson from "../Pages/SinglePerson";
+// import App from "../Pages/App";
 
 export const MovieContext = createContext(null);
 
@@ -19,11 +21,21 @@ function Router() {
       setWatchList([...Watchlist, movieToAdd]);
     }
   }
-
+  function RemoveFromWatchList(MovieToRemove) {
+    console.log(MovieToRemove);
+    setWatchList(
+      Watchlist.filter((item) => {
+        return item.id !== MovieToRemove;
+      }),
+    );
+  }
+  function isInwatchlist(id) {
+    return Watchlist.some((item) => item.id === id);
+  }
   return (
     <BrowserRouter>
       <MovieContext.Provider
-        value={{ Watchlist, setWatchList, AddToWatchlist }}
+        value={{ Watchlist, setWatchList, AddToWatchlist, RemoveFromWatchList,isInwatchlist }}
       >
         <Header />
 
@@ -45,6 +57,12 @@ function Router() {
                   btn2="TV Shows"
                   urls={[urls.popularMovies, urls.popularTVShows]}
                 />
+                <Home
+                  heading="Popular Cast"
+                  btn1="Movies"
+                  btn2="TV Shows"
+                  urls={[urls.popularCast,urls.popularCast]}
+                />
 
                 <Home
                   heading="Top Rated Movies"
@@ -52,13 +70,21 @@ function Router() {
                   btn2="TV Shows"
                   urls={[urls.topRatedMovies, urls.topRatedTVShows]}
                 />
+                <Home
+                  heading="UpComing Movies"
+                  btn1="Movies"
+                  btn2="TV Shows"
+                  urls={[urls.upcomingMovies, urls.upcomingTVShows]}
+                />
               </div>
             }
           />
 
           <Route path="/movie/:id" element={<SingleMovie />} />
-          <Route path="/watchlist" element={<WatchList/>} />
+          <Route path="/tv/:id" element={<SingleMovie />} />
+          <Route path="/watchlist" element={<WatchList />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/person/:id" element={<SinglePerson />} />
         </Routes>
 
         <Footer />

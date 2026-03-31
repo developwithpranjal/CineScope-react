@@ -2,12 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { baseImageUrl } from "../data";
 import "./Home.css";
 import { Link } from "react-router-dom";
-import { BsBookmarkHeartFill } from "react-icons/bs";
+import { BsBookmarkPlusFill } from "react-icons/bs";
 import { MovieContext } from "../Components/Router";
 function Home({ urls, heading, btn1, btn2 }) {
   const [movieData, setMovieData] = useState([]);
   const [showData, setShowData] = useState(urls[0]);
-  let { AddToWatchlist } = useContext(MovieContext);
+  let { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
+    useContext(MovieContext);
 
   useEffect(() => {
     async function fetchMovies() {
@@ -31,6 +32,8 @@ function Home({ urls, heading, btn1, btn2 }) {
     return content;
   }
 
+  const isTV = showData.includes("tv");
+  const isPerson = showData.includes("person");
   return (
     <section className="home-section">
       <header className="home-header">
@@ -49,11 +52,17 @@ function Home({ urls, heading, btn1, btn2 }) {
         {movieData.length > 0 ? (
           movieData.map((item) => (
             <div key={item.id} className="movie-card">
-              {item.poster_path && (
-                <Link to={`/movie/${item.id}`}>
+              {(item.poster_path || item.profile_path) && (
+                <Link
+                  to={
+                    isPerson
+                      ? `/person/${item.id}`
+                      : `/${isTV ? "tv" : "movie"}/${item.id}`
+                  }
+                >
                   <img
-                    src={`${baseImageUrl}${item.poster_path}`}
-                    alt={item.title}
+                    src={`${baseImageUrl}${item.poster_path || item.profile_path}`}
+                    alt={item.title || item.name}
                   />
                 </Link>
               )}
@@ -62,17 +71,27 @@ function Home({ urls, heading, btn1, btn2 }) {
                 <h3>{trimContent(item.title || item.name)}</h3>
 
                 <p>
-                  {item.release_date
-                    ? new Date(item.release_date).toLocaleDateString("en-US", {
+                  {item.release_date || item.first_air_date
+                    ? new Date(
+                        item.release_date || item.first_air_date,
+                      ).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "2-digit",
                       })
                     : ""}
                 </p>
-                 <button onClick={() => AddToWatchlist(item)}>
-                  <BsBookmarkHeartFill /> Add To WatchList</button>
-                
+
+                <button
+                  onClick={() =>
+                    isInwatchlist(item.id)
+                      ? RemoveFromWatchList(item.id)
+                      : AddToWatchlist(item)
+                  }
+                >
+                  <BsBookmarkPlusFill />{" "}
+                  {isInwatchlist(item.id) ? "Remove" : "Add To WatchList"}
+                </button>
               </div>
             </div>
           ))

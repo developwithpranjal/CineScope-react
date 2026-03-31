@@ -1,30 +1,34 @@
-import { useParams } from "react-router-dom";
+import { useParams,useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { baseImageUrl } from "../data";
 import { FaStar } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { useContext } from "react";
 import { MovieContext } from "../Components/Router";
+import { BsBookmarkPlusFill } from "react-icons/bs";
+import { FaRegPlayCircle } from "react-icons/fa";
 import "./SingleMovie.css";
 function SingleMovie() {
   const { id } = useParams();
-
+let { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
+    useContext(MovieContext);
   const [movie, setMovie] = useState(null);
   const [trailerKey, setTrailer] = useState(null);
   const [showTrailer, setShowTrailer] = useState(false);
-  let { AddToWatchlist } = useContext(MovieContext);
+  const isTV = location.pathname.includes("/tv");
 
   useEffect(() => {
     fetchMovie();
-  }, [id]);
+  }, [id, isTV]);
 
   async function fetchMovie() {
     const API_KEY = import.meta.env.VITE_API_KEY;
 
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`,
-    );
+    const type = isTV ? "tv" : "movie";
 
+    const response = await fetch(
+      `https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`,
+    );
     const result = await response.json();
     console.log(result);
 
@@ -38,8 +42,10 @@ function SingleMovie() {
 
     const API_KEY = import.meta.env.VITE_API_KEY;
 
+    const type = isTV ? "tv" : "movie";
+
     const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`,
+      `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`,
     );
 
     const data = await res.json();
@@ -72,11 +78,13 @@ function SingleMovie() {
             {movie.overview}
             <p>
               <span>Genre: </span>
-              {movie.genres[0].name}
+              {movie.genres.map((e)=>e.name).join(", ")||"N/A"}
             </p>
             <p>
-              <FaCalendarAlt />
-              <span> Release Date:</span> {movie.release_date}
+              <span>
+                <FaCalendarAlt /> Release Date:{" "}
+              </span>
+              {movie.release_date || movie.first_air_date}
             </p>
 
             <p className="rating">
@@ -84,13 +92,18 @@ function SingleMovie() {
               <FaStar /> {movie.vote_average.toFixed(1)}/10
             </p>
             <button className="TrailerBtn" onClick={handleTrailer}>
+              <FaRegPlayCircle />{" "}
               {showTrailer ? "Close Trailer" : "Watch Trailer"}
             </button>
             <button
-              className="WatchListBtn"
-              onClick={() => AddToWatchlist(movie)}
+              onClick={() =>
+                isInwatchlist(movie.id)
+                  ? RemoveFromWatchList(movie.id)
+                  : AddToWatchlist(movie)
+              }
             >
-              + Add to WatchList
+              <BsBookmarkPlusFill />{" "}
+              {isInwatchlist(movie.id) ? "Remove" : "Add To WatchList"}
             </button>
             {showTrailer && trailerKey && (
               <div className="trailer-overlay">

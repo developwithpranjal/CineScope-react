@@ -1,13 +1,48 @@
-import React from "react";
+import React, { useState ,useEffect} from "react";
 import { GiFilmProjector } from "react-icons/gi";
 import { FaSearch } from "react-icons/fa";
 import { BsBookmarkHeartFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import WatchList from "../Pages/WatchList";
-import "./Header.css"
+import { Link, useNavigate } from "react-router-dom";
+// import WatchList from "../Pages/WatchList";
+// import SearchBar from "./SearchBar";
+import "./Header.css";
 const Header = () => {
+   const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+
+    const delay = setTimeout(async () => {
+      const API_KEY = import.meta.env.VITE_API_KEY;
+
+      const res = await fetch(
+       ` https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
+      );
+
+      const data = await res.json();
+
+      setSuggestions(data.results?.slice(0, 6) || []);
+    }, 300); 
+
+    return () => clearTimeout(delay);
+  }, [query]);
+
+  function handleClick(item) {
+    const type = item.media_type;
+    navigate(`/${type}/${item.id}`);
+    setQuery("");
+    setSuggestions([]);
+  }
+
+  
   return (
     <header className="Header">
+      
       <div className="logo">
         <Link to={"/"}>
           {" "}
@@ -16,18 +51,43 @@ const Header = () => {
         </Link>
       </div>
       <div className="seacrhBar">
-        <input type="text" placeholder="Search for Movies/Series" />
-        <button className="Searchbutton">
+        <input
+          type="text"
+          placeholder="Search for Movies/Series"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button className="Searchbutton" >
           <FaSearch />
         </button>
+        {suggestions.length > 0 && (
+          <div className="suggestions">
+            {suggestions.map((item) => (
+              <div
+                key={item.id}
+                className="suggestion-item"
+                onClick={() => handleClick(item)}
+              >
+                {item.title || item.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="navLinks">
         {" "}
-        <Link to={"/watchlist"}><BsBookmarkHeartFill/> WatchList</Link>
-        <Link className="loginbtn" to={"/login"}>Login</Link>
+        <Link to={"/watchlist"}>
+          <BsBookmarkHeartFill /> WatchList
+        </Link>
+        <Link className="loginbtn" to={"/login"}>
+          Login
+        </Link>
       </div>
     </header>
   );
 };
+
+  
+  
 
 export default Header;

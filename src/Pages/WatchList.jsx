@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { MovieContext } from "../Components/Router";
 import { baseImageUrl } from "../data";
 import { Link } from "react-router-dom";
-import "./Home.css"; // reuse same grid css
+import { BsBookmarkXFill } from "react-icons/bs";
+import "./Home.css";
 
 const WatchList = () => {
-
-  const { Watchlist } = useContext(MovieContext);
+  const { Watchlist, RemoveFromWatchList } = useContext(MovieContext);
 
   function trimContent(content) {
     if (!content) return "";
@@ -15,51 +15,57 @@ const WatchList = () => {
 
   return (
     <div className="home-section">
-
       <h2>Your WatchList</h2>
 
       <div className="movie-grid">
-
         {Watchlist.length > 0 ? (
+          Watchlist.map((item) => {
+            const isTV = item.name !== undefined;
+            const isPerson = item.profile_path !== undefined;
+            return (
+              <div key={item.id} className="movie-card">
+                {(item.poster_path || item.profile_path) && (
+                  <Link
+                    to={
+                      isPerson
+                        ? `/person/${item.id}`
+                        : `/${isTV ? "tv" : "movie"}/${item.id}`
+                    }
+                  >
+                    <img
+                      src={`${baseImageUrl}${item.poster_path || item.profile_path}`}
+                      alt={item.title || item.name}
+                    />
+                  </Link>
+                )}
 
-          Watchlist.map((item) => (
+                <div className="content">
+                  <h3>{trimContent(item.title || item.name)}</h3>
 
-            <div key={item.id} className="movie-card">
-
-              {item.poster_path && (
-                <Link to={`/movie/${item.id}`}>
-                  <img
-                    src={`${baseImageUrl}${item.poster_path}`}
-                    alt={item.title}
-                  />
-                </Link>
-              )}
-
-              <div className="content">
-
-                <h3>{trimContent(item.title || item.name)}</h3>
-
-                <p>
-                  {item.release_date
-                    ? new Date(item.release_date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "2-digit",
-                      })
-                    : ""}
-                </p>
-
+                  <p>
+                    {item.release_date || item.first_air_date
+                      ? new Date(
+                          item.release_date || item.first_air_date,
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "2-digit",
+                        })
+                      : ""}
+                  </p>
+                  <span className="removebtn">
+                    <BsBookmarkXFill
+                      onClick={() => RemoveFromWatchList(item.id)}
+                    />
+                  </span>
+                </div>
               </div>
-
-            </div>
-          ))
-
+            );
+          })
         ) : (
           <p>No movies in WatchList 😢</p>
         )}
-
       </div>
-
     </div>
   );
 };
