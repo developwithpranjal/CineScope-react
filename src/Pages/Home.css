@@ -3,20 +3,19 @@
   margin: 0;
   padding: 0;
 }
+
 body {
   background: #0f172a;
-  font-family:
-    Segoe UI,
-    sans-serif;
-  margin: 0;
-  padding: 0;
+  font-family: Segoe UI, sans-serif;
   color: white;
 }
 
+/* Section */
 .home-section {
   padding: 40px 60px;
 }
 
+/* Header */
 .home-header {
   display: flex;
   justify-content: space-between;
@@ -30,6 +29,7 @@ body {
   letter-spacing: 1px;
 }
 
+/* Toggle */
 .toggle-buttons {
   display: flex;
   background: #1e293b;
@@ -47,54 +47,55 @@ body {
   transition: 0.3s;
 }
 
-.toggle-buttons button:hover  {
+.toggle-buttons button:hover {
   background: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
-  color: rgb(255, 255, 255);
 }
 
+/* Grid */
 .movie-grid {
   display: flex;
   gap: 20px;
   overflow-x: auto;
   padding: 20px 0;
-  scrollbar-width:none;
-}
-
-.removebtn{
-  color: rgb(247, 34, 34);
-  position: absolute;
-  top: 1%;
-  right: 2%;
-  font-size:25px ;
-  background-color: rgba(240, 248, 255, 0.664);
-border-radius: 0 10px 0 0 ;
+  scrollbar-width: none;
+  scroll-behavior: smooth; /* 🔥 smooth scroll */
 }
 
 .movie-grid::-webkit-scrollbar {
   display: none;
 }
 
+/* Card */
 .movie-card {
-  min-width: 180px;
-  transition: 0.3s;
+  width: 200px;
+  flex: 0 0 auto;
+  background-color: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease;
 }
 
 .movie-card:hover {
   transform: scale(1.05);
 }
 
+/* Image */
 .movie-card img {
   width: 100%;
-  height: 260px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  margin-bottom: 10px;
-  position: relative;
+  height: 280px;
+  object-fit: cover; /* ✅ FIX */
+  display: block;
+}
+
+/* Content */
+.content {
+  padding: 10px;
+  text-align: center;
 }
 
 .content h3 {
-  font-size: 17px;
+  font-size: 16px;
   margin-bottom: 5px;
 }
 
@@ -103,3 +104,63 @@ border-radius: 0 10px 0 0 ;
   color: #94a3b8;
 }
 
+.watchlist-icon {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  color: #fa0202;
+  font-size: 20px;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.movie-card:hover .watchlist-icon {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.watchlist-icon {
+  transform: translateY(-10px);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-poster {
+  width: 100%;
+  height: 250px;
+}
+
+.skeleton-title {
+  width: 80%;
+  height: 20px;
+  margin: 10px auto;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.skeleton-text.small {
+  width: 60%;
+  margin: auto;
+}
+
+.skeleton-btn {
+  width: 120px;
+  height: 35px;
+  margin: 10px auto;
+}

@@ -2,23 +2,30 @@ import { useContext, useEffect, useState } from "react";
 import { baseImageUrl } from "../data";
 import "./Home.css";
 import { Link } from "react-router-dom";
-import { BsBookmarkPlusFill } from "react-icons/bs";
+import { BsBookmarkPlusFill, BsBookmarkCheckFill } from "react-icons/bs";
 import { MovieContext } from "../Components/Router";
+
 function Home({ urls, heading, btn1, btn2 }) {
   const [movieData, setMovieData] = useState([]);
   const [showData, setShowData] = useState(urls[0]);
+  const [loading, setLoading] = useState(true);
+
   let { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
     useContext(MovieContext);
 
   useEffect(() => {
     async function fetchMovies() {
       try {
+        setLoading(true);
+
         const response = await fetch(showData);
         const result = await response.json();
+
         setMovieData(result.results || []);
-        console.log(result);
       } catch (error) {
         console.error("Error fetching movies:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -26,14 +33,13 @@ function Home({ urls, heading, btn1, btn2 }) {
   }, [showData]);
 
   function trimContent(content) {
-    if (content.length > 20) {
-      return content.slice(0, 20) + "...";
-    }
-    return content;
+    if (!content) return "";
+    return content.length > 20 ? content.slice(0, 20) + "..." : content;
   }
 
   const isTV = showData.includes("tv");
   const isPerson = showData.includes("person");
+
   return (
     <section className="home-section">
       <header className="home-header">
@@ -49,7 +55,21 @@ function Home({ urls, heading, btn1, btn2 }) {
       </header>
 
       <div className="movie-grid">
-        {movieData.length > 0 ? (
+        {loading ? (
+          Array(12)
+            .fill(0)
+            .map((_, i) => (
+              <div key={i} className="movie-card">
+                <div className="skeleton skeleton-poster"></div>
+
+                <div className="content">
+                  <div className="skeleton skeleton-title"></div>
+                  <div className="skeleton skeleton-text small"></div>
+                  <div className="skeleton skeleton-btn"></div>
+                </div>
+              </div>
+            ))
+        ) : movieData.length > 0 ? (
           movieData.map((item) => (
             <div key={item.id} className="movie-card">
               {(item.poster_path || item.profile_path) && (
@@ -61,7 +81,9 @@ function Home({ urls, heading, btn1, btn2 }) {
                   }
                 >
                   <img
-                    src={`${baseImageUrl}${item.poster_path || item.profile_path}`}
+                    src={`${baseImageUrl}${
+                      item.poster_path || item.profile_path
+                    }`}
                     alt={item.title || item.name}
                   />
                 </Link>
@@ -81,16 +103,20 @@ function Home({ urls, heading, btn1, btn2 }) {
                       })
                     : ""}
                 </p>
-
                 <button
                   onClick={() =>
                     isInwatchlist(item.id)
                       ? RemoveFromWatchList(item.id)
                       : AddToWatchlist(item)
                   }
+                  className="watchlist-icon"
+                  title="Add To WatchList"
                 >
-                  <BsBookmarkPlusFill />{" "}
-                  {isInwatchlist(item.id) ? "Remove" : "Add To WatchList"}
+                  {isInwatchlist(item.id) ? (
+                    <BsBookmarkCheckFill />
+                  ) : (
+                    <BsBookmarkPlusFill />
+                  )}
                 </button>
               </div>
             </div>

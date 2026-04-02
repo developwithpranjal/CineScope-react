@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { GiFilmProjector } from "react-icons/gi";
 import { FaSearch } from "react-icons/fa";
 import { BsBookmarkHeartFill } from "react-icons/bs";
@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import SearchBar from "./SearchBar";
 import "./Header.css";
 const Header = () => {
-   const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
 
@@ -21,13 +21,13 @@ const Header = () => {
       const API_KEY = import.meta.env.VITE_API_KEY;
 
       const res = await fetch(
-       ` https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
+        ` https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`,
       );
 
       const data = await res.json();
 
       setSuggestions(data.results?.slice(0, 6) || []);
-    }, 300); 
+    }, 300);
 
     return () => clearTimeout(delay);
   }, [query]);
@@ -39,10 +39,8 @@ const Header = () => {
     setSuggestions([]);
   }
 
-  
   return (
     <header className="Header">
-      
       <div className="logo">
         <Link to={"/"}>
           {" "}
@@ -57,7 +55,7 @@ const Header = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button className="Searchbutton" >
+        <button className="Searchbutton">
           <FaSearch />
         </button>
         {suggestions.length > 0 && (
@@ -68,7 +66,18 @@ const Header = () => {
                 className="suggestion-item"
                 onClick={() => handleClick(item)}
               >
-                {item.title || item.name}
+                <img
+                  src={
+                    item.poster_path
+                      ? `https://image.tmdb.org/t/p/w92${item.poster_path}`
+                      : "https://via.placeholder.com/50"
+                  }
+                  alt=""
+                />
+                <div>
+                <p>{item.title || item.name}</p>
+                <span>{item.media_type}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -86,8 +95,5 @@ const Header = () => {
     </header>
   );
 };
-
-  
-  
 
 export default Header;
