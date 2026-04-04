@@ -5,7 +5,7 @@ function LocationData() {
   const [city, setCity] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [theaters, setTheaters] = useState([]);
   const API_KEY = import.meta.env.VITE_GEO_KEY;
 
   function getLocation() {
@@ -24,6 +24,28 @@ function LocationData() {
           const lng = position.coords.longitude;
 
           setLocation({ lat, lng });
+          // 🔥 fetch nearby theaters
+          const query = `
+  [out:json];
+  (
+    node["amenity"="cinema"](around:5000, ${lat}, ${lng});
+    node["amenity"="theatre"](around:5000, ${lat}, ${lng});
+    way["amenity"="cinema"](around:5000, ${lat}, ${lng});
+  );
+  out center;
+`;
+
+          const theaterRes = await fetch(
+            "https://overpass-api.de/api/interpreter",
+            {
+              method: "POST",
+              body: query,
+            },
+          );
+
+          const theaterData = await theaterRes.json();
+
+          setTheaters(theaterData.elements || []);
 
           const res = await fetch(
             `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${API_KEY}`,
@@ -50,7 +72,7 @@ function LocationData() {
     );
   }
 
-  return { Location, city, error, loading, getLocation };
+  return { Location, city, error, loading, getLocation, theaters };
 }
 
 export default LocationData;

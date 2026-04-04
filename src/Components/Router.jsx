@@ -8,6 +8,7 @@ import WatchList from "../Pages/WatchList";
 import Login from "../Pages/Login";
 import { createContext, useState } from "react";
 import SinglePerson from "../Pages/SinglePerson";
+// import SingleCompany from "../Pages/SingleCompany";
 // import App from "../Pages/App";
 
 export const MovieContext = createContext(null);
@@ -35,7 +36,13 @@ function Router() {
   return (
     <BrowserRouter>
       <MovieContext.Provider
-        value={{ Watchlist, setWatchList, AddToWatchlist, RemoveFromWatchList,isInwatchlist }}
+        value={{
+          Watchlist,
+          setWatchList,
+          AddToWatchlist,
+          RemoveFromWatchList,
+          isInwatchlist,
+        }}
       >
         <Header />
 
@@ -61,7 +68,7 @@ function Router() {
                   heading="Popular Cast"
                   btn1="Movies"
                   btn2="TV Shows"
-                  urls={[urls.popularCast,urls.popularCast]}
+                  urls={[urls.popularCast, urls.popularCast]}
                 />
 
                 <Home
@@ -76,6 +83,7 @@ function Router() {
                   btn2="TV Shows"
                   urls={[urls.upcomingMovies, urls.upcomingTVShows]}
                 />
+                
               </div>
             }
           />
@@ -85,6 +93,7 @@ function Router() {
           <Route path="/watchlist" element={<WatchList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/person/:id" element={<SinglePerson />} />
+          {/* <Route path="/company/:id" element={<SingleCompany />} /> */}
         </Routes>
 
         <Footer />

@@ -22,6 +22,7 @@ function Home({ urls, heading, btn1, btn2 }) {
         const result = await response.json();
 
         setMovieData(result.results || []);
+        console.log(result)
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {

@@ -1,12 +1,38 @@
 .single-movie {
   display: flex;
   gap: 50px;
-  padding: 50px;
+  /* padding: 50px; */
   background: #0f172a;
   color: white;
   min-height: 100vh;
+  background-size: cover;
+  position: relative;
+  justify-content: center;
+align-items: center;
+padding: 40px 20px;
+overflow: hidden;
+background-color: #020617;
 }
-
+.single-movie::before{
+    content: "";
+    position: absolute;
+    inset: 0.5;
+    background: rgba(2, 6, 23,0.75);
+    z-index: 1;
+}
+.movie_container{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 40px;
+    max-width: 1100px;
+    width: 100%;
+    background: rgba(30, 41, 59, 0.65);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7)
+    
+}
 .movie-left img {
   width: 300px;
   border-radius: 12px;
@@ -15,6 +41,20 @@
 
 .movie-right {
   flex: 1;
+  
+}
+.movie-right h1{
+    text-align: center;
+}
+.movie-right h1::after {
+  content: "";
+  display: block;
+  width: auto;
+  margin-top: 10px;
+  height: 4px;
+  background: #3b82f6;
+  margin-bottom: 18px;
+  border-radius: 10px;
 }
 
 .movie-description {
@@ -22,9 +62,11 @@
   padding: 30px;
   border-radius: 12px;
 }
+
 .movie-info span {
   font-weight: bold;
   color: #facc15;
+  font-size: 18px;
 }
 .movie-info p {
   line-height: 2;
@@ -102,7 +144,7 @@
 .close-btn {
   position: absolute;
   top: -10px;
-  right: 45%;
+  right: 0;
   background-color: #facc15;
   color: white;
   border: none;
@@ -114,8 +156,15 @@
 .WatchListBtn {
   background-color: red;
 }
+.location-btn{
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+}
 .cast-wrapper {
-  /* margin-top: 20px; */
+  margin-top: 20px;
   padding: 0 50px;
 }
 
@@ -129,6 +178,7 @@
   gap: 15px;
   overflow-x: auto;
   padding-bottom: 10px;
+  /* margin-top: 20px; */
 }
 
 .cast-container::-webkit-scrollbar {
@@ -137,7 +187,7 @@
 
 .cast-card {
   width: 160px;
-  height: 250px;
+  height: 290px;
   flex-shrink: 0;
   background: #1e293b;
   border-radius: 12px;
@@ -162,6 +212,10 @@
   font-size: 1rem;
   color: white;
   font-weight: bold;
+}
+.cast-card p:last-child{
+    color: #facc15;
+    font-weight: 300;
 }
 .cast-container a {
   text-decoration: none;
@@ -205,4 +259,25 @@
   width: 120px;
   height: 40px;
   margin-top: 15px;
+}
+.theater-list {
+  margin-top: 20px;
+ 
+}
+
+.theater-card {
+  background: #1e293b;
+  padding: 3px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1.5px solid #facc15;
+  margin-top: 15px;
+}
+.theater-card p{
+background-color:#233046;
+padding: 5px 150px 5px 5px;
+cursor: pointer;
+}
+.theater-card p:hover{
+    background-color:#1e293b;
 }

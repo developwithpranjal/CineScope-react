@@ -14,6 +14,5 @@ export const urls = {
 &primary_release_date.lte=${year}-12-31
 &sort_by=popularity.desc`,
   upcomingTVShows: `${BASE_URL}discover/tv?first_air_date.gte=2026-05-30&sort_by=first_air_date.lte=2028-01-01&api_key=${API_KEY}`,
-  popularCast:`${BASE_URL}person/popular?api_key=${API_KEY}`
-  
+  popularCast:`${BASE_URL}person/popular?api_key=${API_KEY}`,
 };

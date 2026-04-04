@@ -81,7 +81,14 @@ function SinglePerson() {
             <b>Known For:</b> {person.known_for_department}
           </p>
           <p>
-            <b>Birthday:</b> {person.birthday || "N/A"}
+            <b>Birthday: </b>
+            {person.birthday
+              ? new Date(person.birthday).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "2-digit",
+                })
+              : ""}
           </p>
           <p>
             <b>Place of Birth:</b> {person.place_of_birth || "N/A"}
@@ -90,7 +97,7 @@ function SinglePerson() {
           <p>
             <b>Biography:</b>{" "}
             {person.biography
-              ? person.biography.slice(0, 400) + "..."
+              ? person.biography.slice(0, 600) + "..."
               : "No Biography Available"}
           </p>
         </div>

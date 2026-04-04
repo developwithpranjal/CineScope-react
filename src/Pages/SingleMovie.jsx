@@ -12,14 +12,14 @@ function SingleMovie() {
   const { id } = useParams();
   const isTV = location.pathname.includes("/tv");
   const [cast, setCast] = useState([]);
-
-  const {Location , city, error, loading, getLocation } = LocationData()
-  const { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
-    useContext(MovieContext);
-
   const [movie, setMovie] = useState(null);
   const [trailerKey, setTrailer] = useState(null);
   const [showTrailer, setShowTrailer] = useState(false);
+
+  const { Location, city, error, loading, getLocation, theaters } =
+    LocationData();
+  const { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
+    useContext(MovieContext);
 
   useEffect(() => {
     fetchMovie();
@@ -34,6 +34,8 @@ function SingleMovie() {
     );
     const result = await response.json();
     setMovie(result);
+    console.log(result);
+
     const credits = await fetch(
       `https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`,
     );
@@ -65,7 +67,12 @@ function SingleMovie() {
       setShowTrailer(true);
     }
   }
-
+  function OpenForBooking(movie, city) {
+    window.open(
+      `https://www.google.com/search?q=${encodeURIComponent(movie + "showtimes" + city)}`,
+      "_blank",
+    );
+  }
   if (!movie) {
     return (
       <div className="single-movie">
@@ -96,100 +103,129 @@ function SingleMovie() {
 
   return (
     <>
-      <div className="single-movie">
-        <div className="movie-left">
-          <img
-            src={`${baseImageUrl}${movie.poster_path}`}
-            alt={movie.title || movie.name}
-          />
-        </div>
+      <div
+        className="single-movie"
+        style={{
+          backgroundImage: movie.backdrop_path
+            ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
+            : `url(https://image.tmdb.org/t/p/w500${movie.poster_path})`,
+        }}
+      >
+        <div className="movie_container">
+          <div className="movie-left">
+            <img
+              src={`${baseImageUrl}${movie.poster_path}`}
+              alt={movie.title || movie.name}
+            />
+          </div>
 
-        <div className="movie-right">
-          <div className="movie-description">
-            <div className="movie-info">
-              <h1>{movie.title || movie.name}</h1>
+          <div className="movie-right">
+            <div className="movie-description">
+              <div className="movie-info">
+                <h1>{movie.title || movie.name}</h1>
 
-              <span>Description: </span>
-              <p>{movie.overview}</p>
+                <span>Description: </span>
+                <p>{movie.overview}</p>
 
-              <p>
-                <span>Genre: </span>
-                {movie.genres?.map((e) => e.name).join(", ") || "N/A"}
-              </p>
+                <p>
+                  <span>Genre: </span>
+                  {movie.genres?.map((e) => e.name).join(", ") || "N/A"}
+                </p>
 
-              <p>
-                <span>
-                  <FaCalendarAlt /> Release Date:{" "}
-                </span>
-                {movie.release_date || movie.first_air_date || "N/A"}
-              </p>
+                <p>
+                  <span>
+                     Release Date:{" "}
+                  </span>
+                  {movie.release_date || movie.first_air_date || "N/A"}
+                </p>
 
-              <p className="rating">
-                <span>Rating: </span>
-                <FaStar />{" "}
-                {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
-                /10
-              </p>
+                <p className="rating">
+                  <span>Rating: </span>
+                  <FaStar />{" "}
+                  {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+                  /10
+                </p>
 
-              <p className="language">
-                <span>Language: </span>
-                {movie.spoken_languages
-                  ?.map((e) => e.english_name)
-                  .join(", ") || "N/A"}
-              </p>
+                <p className="language">
+                  <span>Language: </span>
+                  {movie.spoken_languages
+                    ?.map((e) => e.english_name)
+                    .join(", ") || "N/A"}
+                </p>
 
-              <button className="TrailerBtn" onClick={handleTrailer}>
-                <FaRegPlayCircle />{" "}
-                {showTrailer ? "Close Trailer" : "Watch Trailer"}
-              </button>
+                <button className="TrailerBtn" onClick={handleTrailer}>
+                  <FaRegPlayCircle />{" "}
+                  {showTrailer ? "Close Trailer" : "Watch Trailer"}
+                </button>
 
-              <button
-                className="WatchListBtn"
-                onClick={() =>
-                  isInwatchlist(movie.id)
-                    ? RemoveFromWatchList(movie.id)
-                    : AddToWatchlist(movie)
-                }
-              >
-                <BsBookmarkPlusFill />{" "}
-                {isInwatchlist(movie.id) ? "Remove" : "Add To WatchList"}
-              </button>
+                <button
+                  className="WatchListBtn"
+                  onClick={() =>
+                    isInwatchlist(movie.id)
+                      ? RemoveFromWatchList(movie.id)
+                      : AddToWatchlist(movie)
+                  }
+                >
+                  <BsBookmarkPlusFill />{" "}
+                  {isInwatchlist(movie.id) ? "Remove" : "Add To WatchList"}
+                </button>
 
-              {showTrailer && trailerKey && (
-                <div className="trailer-overlay">
-                  <div className="trailer-box">
-                    <button
-                      className="close-btn"
-                      onClick={() => setShowTrailer(false)}
-                    >
-                      Close ✖
-                    </button>
+                {showTrailer && trailerKey && (
+                  <div className="trailer-overlay">
+                    <div className="trailer-box">
+                      <button
+                        className="close-btn"
+                        onClick={() => setShowTrailer(false)}
+                      >
+                        Close ✖
+                      </button>
 
-                    <iframe
-                      src={`https://www.youtube.com/embed/${trailerKey}`}
-                      title="Trailer"
-                      allowFullScreen
-                    ></iframe>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${trailerKey}`}
+                        title="Trailer"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
                   </div>
+                )}
+              </div>
+              <div className="location-box">
+                <button onClick={getLocation} className="location-btn">
+                  Find Nearest Theater
+                </button>
+
+                {loading && <p className="location-text">Loading...</p>}
+                {error && <p className="location-text">{error}</p>}
+
+                {Location && (
+                  <p className="location-coords">
+                    {/* Lat: {Location.lat}, Lng: {Location.lng} */}
+                  </p>
+                )}
+
+                {city && <p className="location-text">📍 {city}</p>}
+              </div>
+              {theaters && theaters.length > 0 && (
+                <div className="theater-list">
+                  <h3>Nearby Theaters 🎬</h3>
+
+                  {theaters.slice(0, 5).map((t) => (
+                    <div key={t.id} className="theater-card">
+                      <p>
+                        <p
+                          className="theater-name"
+                          onClick={() =>
+                            OpenForBooking(movie.title || movie.name, city)
+                          }
+                        >
+                          <b>{t.tags.name || "Cinema"}</b>
+                        </p>
+                      </p>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-          </div>
-          <div className="location-box">
-            <button onClick={getLocation} className="location-btn">
-              Get Location
-            </button>
-
-            {loading && <p className="location-text">Loading...</p>}
-            {error && <p className="location-text">{error}</p>}
-
-            {Location && (
-              <p className="location-coords">
-                {/* Lat: {Location.lat}, Lng: {Location.lng} */}
-              </p>
-            )}
-
-            {city && <p className="location-text">📍 {city}</p>}
           </div>
         </div>
       </div>
@@ -211,6 +247,7 @@ function SingleMovie() {
                 )}
 
                 <p>{actor.name}</p>
+                <p className="character-name">as {actor.character}</p>
               </div>
             </Link>
           ))}

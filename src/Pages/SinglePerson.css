@@ -46,13 +46,15 @@
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
 .movie-card {
   transition: transform 0.3s ease;
   cursor: pointer;
+  height: 350px;
+  gap: 20px;
 }
 
 .movie-card:hover {
@@ -66,8 +68,9 @@
 }
 
 .movie-card p {
-  margin-top: 8px;
-  font-size: 0.9rem;
+  margin-top: 12px;
+  font-size: 1rem;
+  text-align: center;
   color: #e2e8f0;
 }
 
