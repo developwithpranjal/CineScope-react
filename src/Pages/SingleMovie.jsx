@@ -199,7 +199,6 @@ function SingleMovie() {
 
                 {Location && (
                   <p className="location-coords">
-                    {/* Lat: {Location.lat}, Lng: {Location.lng} */}
                   </p>
                 )}
 

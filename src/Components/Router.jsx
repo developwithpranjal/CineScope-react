@@ -6,11 +6,14 @@ import Footer from "./Footer";
 import { urls } from "../data";
 import WatchList from "../Pages/WatchList";
 import Login from "../Pages/Login";
-import { createContext, useState } from "react";
+import { createContext, useState,useEffect } from "react";
 import SinglePerson from "../Pages/SinglePerson";
 import PageNotFound from "../Pages/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 // import SingleCompany from "../Pages/SingleCompany";
 // import App from "../Pages/App";
 
@@ -18,6 +21,14 @@ export const MovieContext = createContext(null);
 
 function Router() {
   const [Watchlist, setWatchList] = useState([]);
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const unsub = onAuthStateChanged(auth, (u) => {
+    setUser(u);
+  });
+  return () => unsub();
+}, []);
 
   function AddToWatchlist(movieToAdd) {
     const exists = Watchlist.find((item) => item.id === movieToAdd.id);
@@ -36,6 +47,15 @@ function Router() {
   function isInwatchlist(id) {
     return Watchlist.some((item) => item.id === id);
   }
+  function handleLogout() {
+    signOut(auth)
+      .then(() => {
+        alert("Logged out ✅");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
   return (
     <BrowserRouter>
       <MovieContext.Provider
@@ -45,6 +65,8 @@ function Router() {
           AddToWatchlist,
           RemoveFromWatchList,
           isInwatchlist,
+          handleLogout,
+          user,
         }}
       >
         <Header />

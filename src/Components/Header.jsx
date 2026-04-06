@@ -3,6 +3,8 @@ import { GiFilmProjector } from "react-icons/gi";
 import { FaSearch } from "react-icons/fa";
 import { BsBookmarkHeartFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { MovieContext } from "./Router";
 // import WatchList from "../Pages/WatchList";
 // import SearchBar from "./SearchBar";
 import "./Header.css";
@@ -10,6 +12,7 @@ const Header = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
+  const { handleLogout,user } = useContext(MovieContext);
 
   useEffect(() => {
     if (query.length < 2) {
@@ -92,9 +95,11 @@ const Header = () => {
         <Link to={"/watchlist"}>
           <BsBookmarkHeartFill /> WatchList
         </Link>
-        <Link className="loginbtn" to={"/login"}>
-          Login
-        </Link>
+        {user ? (
+          <button onClick={handleLogout}>Logout</button>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </div>
     </header>
   );
