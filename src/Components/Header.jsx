@@ -68,15 +68,19 @@ const Header = () => {
               >
                 <img
                   src={
-                    item.poster_path
-                      ? `https://image.tmdb.org/t/p/w92${item.poster_path}`
-                      : "https://via.placeholder.com/50"
+                    item.media_type === "person"
+                      ? item.profile_path
+                        ? `https://image.tmdb.org/t/p/w92${item.profile_path}`
+                        : "https://via.placeholder.com/50"
+                      : item.poster_path
+                        ? `https://image.tmdb.org/t/p/w92${item.poster_path}`
+                        : "https://via.placeholder.com/50"
                   }
                   alt=""
                 />
                 <div>
-                <p>{item.title || item.name}</p>
-                <span>{item.media_type}</span>
+                  <p>{item.title || item.name}</p>
+                  <span>{item.media_type}</span>
                 </div>
               </div>
             ))}

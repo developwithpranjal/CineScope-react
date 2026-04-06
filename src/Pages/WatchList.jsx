@@ -3,6 +3,7 @@ import { MovieContext } from "../Components/Router";
 import { baseImageUrl } from "../data";
 import { Link } from "react-router-dom";
 import { BsBookmarkXFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 import "./Home.css";
 
 const WatchList = () => {
@@ -55,7 +56,10 @@ const WatchList = () => {
                   </p>
                   <span className="removebtn">
                     <BsBookmarkXFill
-                      onClick={() => RemoveFromWatchList(item.id)}
+                      onClick={() => {
+                        RemoveFromWatchList(item.id);
+                        toast.error("Removed from Watchlist ❌");
+                      }}
                     />
                   </span>
                 </div>

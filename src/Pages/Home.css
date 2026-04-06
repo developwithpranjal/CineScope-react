@@ -54,7 +54,7 @@ body {
   overflow-x: auto;
   padding: 20px 0;
   scrollbar-width: none;
-  scroll-behavior: smooth; /* 🔥 smooth scroll */
+  scroll-behavior: smooth; 
 }
 
 .movie-grid::-webkit-scrollbar {

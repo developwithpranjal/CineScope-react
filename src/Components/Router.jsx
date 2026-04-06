@@ -8,6 +8,9 @@ import WatchList from "../Pages/WatchList";
 import Login from "../Pages/Login";
 import { createContext, useState } from "react";
 import SinglePerson from "../Pages/SinglePerson";
+import PageNotFound from "../Pages/PageNotFound";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import SingleCompany from "../Pages/SingleCompany";
 // import App from "../Pages/App";
 
@@ -83,7 +86,6 @@ function Router() {
                   btn2="TV Shows"
                   urls={[urls.upcomingMovies, urls.upcomingTVShows]}
                 />
-                
               </div>
             }
           />
@@ -93,10 +95,18 @@ function Router() {
           <Route path="/watchlist" element={<WatchList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/person/:id" element={<SinglePerson />} />
-          {/* <Route path="/company/:id" element={<SingleCompany />} /> */}
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
 
         <Footer />
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          theme="dark"
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+        />
       </MovieContext.Provider>
     </BrowserRouter>
   );

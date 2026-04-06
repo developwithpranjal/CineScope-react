@@ -7,7 +7,7 @@ function SinglePerson() {
   const { id } = useParams();
   const [person, setPerson] = useState(null);
   const [movies, setMovies] = useState([]);
-
+  const [visibleCount, setVisibleCount] = useState(10);
   useEffect(() => {
     async function fetchPerson() {
       const API_KEY = import.meta.env.VITE_API_KEY;
@@ -104,13 +104,13 @@ function SinglePerson() {
       </div>
 
       <div className="movies-section">
-        <h2>Movies</h2>
+        <h2> Top Movies</h2>
 
         <div className="movies-grid">
           {movies.length > 0 ? (
             movies
               .sort((a, b) => b.popularity - a.popularity)
-              .slice(0, 10)
+              .slice(0, visibleCount)
               .map((movie) => (
                 <div key={movie.id} className="movie-card">
                   {movie.poster_path && (
@@ -128,6 +128,14 @@ function SinglePerson() {
             <p>No movies found</p>
           )}
         </div>
+        {visibleCount < movies.length && (
+          <button
+            className="load-more-btn"
+            onClick={() => setVisibleCount((prev) => prev + 10)}
+          >
+            Load More
+          </button>
+        )}
       </div>
     </div>
   );

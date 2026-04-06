@@ -72,22 +72,50 @@ background-color: #020617;
   line-height: 2;
 }
 .movie-info button {
-  margin-top: 15px;
-  padding: 10px 18px;
+  margin-top: 12px;
+  padding: 12px 18px;
   border: none;
-  border-radius: 6px;
-  color: black;
-  cursor: pointer;
+  border-radius: 10px;
   font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+  
+  width: fit-content;
+  min-width: 200px;
+  max-width: 260px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  gap:5px;
+}
+
+.TrailerBtn {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
+}
+
+.TrailerBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.WatchListBtn {
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+  color: white;
+  margin-left: 30px;
+}
+
+.WatchListBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
 }
 .TrailerBtn {
   background-color: rgb(17, 142, 252);
 }
 
-.movie-info {
-  display: flex;
-  flex-direction: column;
-}
+
 .trailer-overlay {
   position: fixed;
   top: 10%;
@@ -148,7 +176,7 @@ background-color: #020617;
   background-color: #facc15;
   color: white;
   border: none;
-  padding: 6px 12px;
+  /* padding: 6px 12px; */
   cursor: pointer;
   font-weight: 600;
   border-radius: 6px;

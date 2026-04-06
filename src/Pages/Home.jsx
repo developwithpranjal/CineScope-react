@@ -4,6 +4,7 @@ import "./Home.css";
 import { Link } from "react-router-dom";
 import { BsBookmarkPlusFill, BsBookmarkCheckFill } from "react-icons/bs";
 import { MovieContext } from "../Components/Router";
+import { toast } from "react-toastify";
 
 function Home({ urls, heading, btn1, btn2 }) {
   const [movieData, setMovieData] = useState([]);
@@ -22,7 +23,7 @@ function Home({ urls, heading, btn1, btn2 }) {
         const result = await response.json();
 
         setMovieData(result.results || []);
-        console.log(result)
+        console.log(result);
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
@@ -105,11 +106,15 @@ function Home({ urls, heading, btn1, btn2 }) {
                     : ""}
                 </p>
                 <button
-                  onClick={() =>
-                    isInwatchlist(item.id)
-                      ? RemoveFromWatchList(item.id)
-                      : AddToWatchlist(item)
-                  }
+                  onClick={() => {
+                    if (isInwatchlist(item.id)) {
+                      RemoveFromWatchList(item.id);
+                      toast.error("Removed from Watchlist ❌");
+                    } else {
+                      AddToWatchlist(item);
+                      toast.success("Added to Watchlist ✅");
+                    }
+                  }}
                   className="watchlist-icon"
                   title="Add To WatchList"
                 >
