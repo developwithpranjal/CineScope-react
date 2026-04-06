@@ -6,6 +6,7 @@
   color: white;
   min-height: 100vh;
   background-size: cover;
+  background-position: center;
   position: relative;
   justify-content: center;
 align-items: center;
@@ -16,13 +17,18 @@ background-color: #020617;
 .single-movie::before{
     content: "";
     position: absolute;
-    inset: 0.5;
-    background: rgba(2, 6, 23,0.5);
+    inset: 0;
+    background: linear-gradient(
+    to right,
+    rgba(2, 6, 23, 0.2),
+    rgba(2, 6, 23, 0.4),
+    rgba(2, 6, 23, 0.1)
+  );
     z-index: 1;
 }
 .movie_container{
     position: relative;
-    z-index: 1;
+    z-index: 2;
     display: flex;
     gap: 40px;
     max-width: 1100px;
