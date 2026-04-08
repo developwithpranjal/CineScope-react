@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 import { BsBookmarkPlusFill, BsBookmarkCheckFill } from "react-icons/bs";
 import { MovieContext } from "../Components/Router";
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router-dom";
 function Home({ urls, heading, btn1, btn2 }) {
   const [movieData, setMovieData] = useState([]);
-  const [showData, setShowData] = useState(urls[0]);
+  const [showData, setShowData] = useState(urls);
   const [loading, setLoading] = useState(true);
-
-  let { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
+  const navigate = useNavigate();
+  let { AddToWatchlist, RemoveFromWatchList, isInwatchlist, user } =
     useContext(MovieContext);
 
   useEffect(() => {
@@ -19,10 +19,12 @@ function Home({ urls, heading, btn1, btn2 }) {
       try {
         setLoading(true);
 
-        const response = await fetch(showData);
-        const result = await response.json();
+        const response = await Promise.all(showData.map((url) => fetch(url)));
 
-        setMovieData(result.results || []);
+        const result = await Promise.all(response.map((res) => res.json()));
+        const combinedData = result.flatMap((r) => r.results || []);
+
+        setMovieData(combinedData);
         console.log(result);
       } catch (error) {
         console.error("Error fetching movies:", error);
@@ -39,21 +41,22 @@ function Home({ urls, heading, btn1, btn2 }) {
     return content.length > 20 ? content.slice(0, 20) + "..." : content;
   }
 
-  const isTV = showData.includes("tv");
-  const isPerson = showData.includes("person");
+  const isPerson = showData.some((url) => url.includes("person"));
+const isTV = showData.some((url) => url.includes("tv"));
 
   return (
     <section className="home-section">
       <header className="home-header">
         <h2>{heading}</h2>
+        {!isPerson && (
+          <div className="toggle-buttons">
+            <button className={showData[0]===urls[0]?"active-btn":""} onClick={() => setShowData([urls[0]])}>
+              {btn1}
+            </button>
 
-        <div className="toggle-buttons">
-          <button className="active-btn" onClick={() => setShowData(urls[0])}>
-            {btn1}
-          </button>
-
-          <button onClick={() => setShowData(urls[1])}>{btn2}</button>
-        </div>
+            <button className={showData[0]===urls[1]?"active-btn":""} onClick={() => setShowData([urls[1]])}>{btn2}</button>
+          </div>
+        )}
       </header>
 
       <div className="movie-grid">
@@ -72,8 +75,11 @@ function Home({ urls, heading, btn1, btn2 }) {
               </div>
             ))
         ) : movieData.length > 0 ? (
-          movieData.map((item) => (
-            <div key={item.id} className="movie-card">
+          movieData.map((item,index) => (
+            <div
+              key={index}
+              className={item.profile_path ? "celeb-card" : "movie-card"}
+            >
               {(item.poster_path || item.profile_path) && (
                 <Link
                   to={
@@ -107,6 +113,12 @@ function Home({ urls, heading, btn1, btn2 }) {
                 </p>
                 <button
                   onClick={() => {
+                    if (!user) {
+                      toast.warning("Please login first ⚠️");
+                      navigate("/login");
+                      return;
+                    }
+
                     if (isInwatchlist(item.id)) {
                       RemoveFromWatchList(item.id);
                       toast.error("Removed from Watchlist ❌");

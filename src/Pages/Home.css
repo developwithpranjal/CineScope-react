@@ -44,8 +44,12 @@ body {
   transition: 0.3s;
 }
 
-.toggle-buttons button:hover {
+/* .toggle-buttons button:hover {
   background: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
+} */
+.toggle-buttons .active-btn{
+  background: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
+
 }
 
 .movie-grid {
@@ -78,11 +82,29 @@ body {
 .movie-card img {
   width: 100%;
   height: 280px;
-  object-fit: cover; /* ✅ FIX */
+  object-fit: cover; 
   display: block;
 }
-
-.content {
+.celeb-card{
+  min-width: 220px;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+}
+.celeb-card img{
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #f89e00;
+  /* display: block; */
+  transition: 0.3s ease;
+}
+.celeb-card img:hover{
+  transform: scale(1.08);
+  border-color: #fa0202;
+}
+ .content {
   padding: 10px;
   text-align: center;
 }

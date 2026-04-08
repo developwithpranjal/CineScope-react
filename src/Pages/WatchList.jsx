@@ -16,7 +16,7 @@ const WatchList = () => {
 
   return (
     <div className="home-section">
-      <h2>Your WatchList</h2>
+      <h2>Your WatchList ({Watchlist.length })</h2>
 
       <div className="movie-grid">
         {Watchlist.length > 0 ? (

@@ -55,6 +55,7 @@
   cursor: pointer;
   height: 350px;
   gap: 20px;
+  /* border-radius: 50%; */
 }
 
 .movie-card:hover {

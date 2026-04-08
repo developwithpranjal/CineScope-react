@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import ScrollToTop from "./ScrollToTop";
 // import SingleCompany from "../Pages/SingleCompany";
 // import App from "../Pages/App";
 
@@ -70,6 +71,7 @@ useEffect(() => {
         }}
       >
         <Header />
+        <ScrollToTop/>
 
         <Routes>
           <Route
@@ -92,7 +94,7 @@ useEffect(() => {
                 <Home
                   heading="Popular Cast"
                   btn1="Movies"
-                  btn2="TV Shows"
+                  btn2="TV Shows "
                   urls={[urls.popularCast, urls.popularCast]}
                 />
 
@@ -122,12 +124,12 @@ useEffect(() => {
 
         <Footer />
         <ToastContainer
-          position="top-right"
+          position="bottom-right"
           autoClose={2000}
           theme="dark"
           newestOnTop
           closeOnClick
-          pauseOnHover
+          pauseOnHover={false}
         />
       </MovieContext.Provider>
     </BrowserRouter>

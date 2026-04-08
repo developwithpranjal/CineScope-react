@@ -69,26 +69,48 @@
   display: flex;
   gap: 20px;
   align-items: center;
-  justify-content: center;
 }
 
 .navLinks a {
   text-decoration: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 3px;
   color: white;
   font-weight: 500;
   transition: 0.3s;
 }
 
-.navLinks a:hover {
-  color: #facc15;
+
+.navLinks a::after{
+  content: "";
+  position:absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background: #c79f01;
+  transition: width 0.3s ease;
+}
+.navLinks a:hover::after{
+  width: 100%;
+}
+.navLinks svg{
+  color: #f5c518;
 }
 
 .navLinks button {
   padding: 0.5rem 1rem;
   background-color: #facc15;
-  border-radius: 15px;
+  border-radius: 20px;
+  border-style: none !important;
   color: #020617 !important;
   font-weight: bold !important;
+  cursor: pointer;
+}
+.navLinks button:hover{
+  background: #c79f01;
 }
 .loginbtn:hover {
   background: #c29c03;

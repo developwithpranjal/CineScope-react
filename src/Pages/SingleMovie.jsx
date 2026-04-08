@@ -6,7 +6,8 @@ import { MovieContext } from "../Components/Router";
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import "./SingleMovie.css";
 import LocationData from "./LocationData";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function SingleMovie() {
   const location = useLocation();
   const { id } = useParams();
@@ -18,9 +19,9 @@ function SingleMovie() {
 
   const { Location, city, error, loading, getLocation, theaters } =
     LocationData();
-  const { AddToWatchlist, RemoveFromWatchList, isInwatchlist } =
+  const { AddToWatchlist, RemoveFromWatchList, isInwatchlist, user } =
     useContext(MovieContext);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchMovie();
   }, [id, isTV]);
@@ -133,9 +134,7 @@ function SingleMovie() {
                 </p>
 
                 <p>
-                  <span>
-                     Release Date:{" "}
-                  </span>
+                  <span>Release Date: </span>
                   {movie.release_date || movie.first_air_date || "N/A"}
                 </p>
 
@@ -160,11 +159,21 @@ function SingleMovie() {
 
                 <button
                   className="WatchListBtn"
-                  onClick={() =>
-                    isInwatchlist(movie.id)
-                      ? RemoveFromWatchList(movie.id)
-                      : AddToWatchlist(movie)
-                  }
+                  onClick={() => {
+                    if (!user) {
+                      toast.warning("Please login first ⚠️");
+                      navigate("/login");
+                      return;
+                    }
+
+                    if (isInwatchlist(movie.id)) {
+                      RemoveFromWatchList(movie.id);
+                      toast.error("Removed from Watchlist ❌");
+                    } else {
+                      AddToWatchlist(movie);
+                      toast.success("Added to Watchlist ✅");
+                    }
+                  }}
                 >
                   <BsBookmarkPlusFill />{" "}
                   {isInwatchlist(movie.id) ? "Remove" : "Add To WatchList"}
@@ -197,10 +206,7 @@ function SingleMovie() {
                 {loading && <p className="location-text">Loading...</p>}
                 {error && <p className="location-text">{error}</p>}
 
-                {Location && (
-                  <p className="location-coords">
-                  </p>
-                )}
+                {Location && <p className="location-coords"></p>}
 
                 {city && <p className="location-text">📍 {city}</p>}
               </div>
