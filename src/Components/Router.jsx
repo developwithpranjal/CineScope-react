@@ -15,7 +15,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import ScrollToTop from "./ScrollToTop";
-import GenrePage from "../Pages/Genrepage";
+import GenrePage from "../Pages/GenrePage";
 import Profile from "../Pages/Profile";
 
 // import SingleCompany from "../Pages/SingleCompany";
