@@ -15,6 +15,9 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import ScrollToTop from "./ScrollToTop";
+import GenrePage from "../Pages/Genrepage";
+import Profile from "../Pages/Profile";
+
 // import SingleCompany from "../Pages/SingleCompany";
 // import App from "../Pages/App";
 
@@ -119,6 +122,8 @@ useEffect(() => {
           <Route path="/watchlist" element={<WatchList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/person/:id" element={<SinglePerson />} />
+          <Route path="/genre/:id" element={<GenrePage />} />
+          <Route path="/profile" element={<Profile/>} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
 

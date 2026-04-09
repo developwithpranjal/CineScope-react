@@ -1,7 +1,7 @@
 .Header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 15px 40px;
   background: #020617;
   color: white;
@@ -9,6 +9,7 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  gap: 20px;
 }
 
 .logo a {
@@ -25,44 +26,87 @@
   font-size: 28px;
 }
 
-.seacrhBar {
+.search-wrapper {
   display: flex;
   align-items: center;
   background: #1e293b;
   border-radius: 30px;
-  overflow: hidden;
-  width: 350px;
+  overflow: visible;
+  width: 420px;
+  position: relative;
+  transition: 0.3s;
 }
 
-.seacrhBar input {
+.search-wrapper:focus-within {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.7);
+}
+
+.genre-inline {
+  position: relative;
+  border-right: 1px solid #334155;
+}
+
+.genre-inline select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: #1e293b;
+  color: #cbd5f5;
+  width: 100px;
+  border: none;
+  outline: none;
+border-radius: 20px;
+  padding: 10px 20px 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.genre-inline select:hover {
+  /* color: #facc15; */
+}
+
+.genre-inline::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #facc15;
+  pointer-events: none;
+}
+
+.search-wrapper input {
   flex: 1;
-  padding: 9px 13px;
+  padding: 10px 12px;
   border: none;
   outline: none;
   background: transparent;
   color: white;
   font-size: 14px;
 }
-.seacrhBar:focus-within{
-  /* outline: 2px solid yellow; */
-  /* border: 2px solid yellow; */
-  background: rgba(255,255,255,0.12);
-  box-shadow: 0 0 12px rgba(251, 232, 22, 0.815);
-}
 
-.seacrhBar input::placeholder {
+.search-wrapper input::placeholder {
   color: #94a3b8;
 }
 
 .Searchbutton {
   border: none;
   background: #facc15;
-  color: black;
-  padding: 11px 13px;
+  color: #020617;
+  padding: 11.5px 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 0 20px 20px 0;
+}
+
+.Searchbutton:hover {
+  background: #eab308;
 }
 
 .navLinks {
@@ -76,60 +120,54 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
   color: white;
   font-weight: 500;
   transition: 0.3s;
 }
 
-
-.navLinks a::after{
+.navLinks a::after {
   content: "";
-  position:absolute;
+  position: absolute;
   left: 0;
   bottom: -5px;
   width: 0%;
   height: 2px;
-  background: #c79f01;
+  background: #facc15;
   transition: width 0.3s ease;
 }
-.navLinks a:hover::after{
+
+.navLinks a:hover::after {
   width: 100%;
 }
-.navLinks svg{
-  color: #f5c518;
+
+.navLinks svg {
+  color: #facc15;
 }
 
 .navLinks button {
   padding: 0.5rem 1rem;
   background-color: #facc15;
   border-radius: 20px;
-  border-style: none !important;
-  color: #020617 !important;
-  font-weight: bold !important;
+  border: none;
+  color: #020617;
+  font-weight: bold;
   cursor: pointer;
 }
-.navLinks button:hover{
-  background: #c79f01;
-}
-.loginbtn:hover {
-  background: #c29c03;
-}
-.searchbar {
-  position: relative;
+
+.navLinks button:hover {
+  background: #eab308;
 }
 
 .suggestions {
   position: absolute;
-  top: 80%;
-  left: 33.5%;
-  width: 30%;
+  top: 110%;
+  left: 0;
+  width: 100%;
   background: #1c1f2b;
   border-radius: 10px;
-
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
-
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   z-index: 1000;
 }
@@ -138,16 +176,31 @@
   padding: 10px 14px;
   color: #ddd;
   cursor: pointer;
-display: flex;
-align-items: center;
-gap: 10px;
-
+  display: flex;
+  align-items: center;
+  gap: 10px;
   transition: 0.2s;
 }
 
 .suggestion-item:hover {
   background: #2a2e3f;
-  color: #f5c518;
+  color: #facc15;
+}
+
+.suggestion-item img {
+  width: 35px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.suggestion-item p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.suggestion-item span {
+  font-size: 12px;
+  color: #94a3b8;
 }
 
 .suggestions::-webkit-scrollbar {
@@ -157,15 +210,4 @@ gap: 10px;
 .suggestions::-webkit-scrollbar-thumb {
   background: #444;
   border-radius: 10px;
-}
-.suggestion-item img{
-  width: 35px;
-  border-radius: 6px;
-}
-.suggestion-item p{
-  font-size: 14px
-}
-.suggestion-item span{
-  font-size: 12px;
-  color: white;
 }

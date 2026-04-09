@@ -1,0 +1,91 @@
+.profile-wrapper {
+  min-height: 100vh;
+  background: #020617;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-card {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  color: white;
+}
+
+.profile-image {
+  position: relative;
+  width: 100px;
+  margin: auto;
+}
+
+.profile-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #facc15;
+}
+
+/* EDIT ICON */
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #facc15;
+  color: black;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* FORM */
+.profile-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.profile-card label {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.profile-card input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #020617;
+  color: white;
+}
+
+.profile-card input::placeholder {
+  color: #64748b;
+}
+
+/* GENDER */
+.gender {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+/* BUTTON */
+.profile-card button {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #facc15;
+  color: #020617;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #eab308;
+}

@@ -26,7 +26,7 @@ function LocationData() {
           setLocation({ lat, lng });
 
           //  fetch nearby theaters
-   const query = `
+          const query = `
   [out:json];
   (
     node["amenity"="cinema"](around:5000, ${lat}, ${lng});
@@ -73,7 +73,7 @@ function LocationData() {
     );
   }
 
-  return { Location, city, error, loading, getLocation,theaters  };
+  return { Location, city, error, loading, getLocation, theaters };
 }
 
 export default LocationData;
