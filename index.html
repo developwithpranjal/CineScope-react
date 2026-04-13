@@ -2,12 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- ✅ FIX favicon typo -->
     <link rel="icon" type="image/svg+xml" href="/fabicon.svg" />
+
+    <!-- ✅ Responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cinescope- Explore trending movies and Tv Shows</title>
-    <!-- index.html ke <head> mein add karo -->
 
+    <!-- ✅ Title -->
+    <title>CineScope - Explore Trending Movies & TV Shows</title>
 
+    <!-- ✅ SEO -->
     <meta
       name="description"
       content="CineScope is your ultimate entertainment companion. Discover trending movies, popular TV shows, top-rated films, upcoming releases, and your favorite celebrities — all in one place."
@@ -21,21 +26,47 @@
     <meta name="author" content="Pranjal Agrawal" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph (WhatsApp, Facebook preview) -->
+    <!-- ✅ Open Graph (IMPORTANT FIXES) -->
     <meta
       property="og:title"
-      content="Cinescope- Explore trending movies and Tv Shows"
+      content="CineScope - Explore Trending Movies & TV Shows"
     />
+
     <meta
       property="og:description"
-      content="Your ultimate entertainment companion. Explore trending movies, TV shows, celebrities and build your personal watchlist."
+      content="Discover trending movies, TV shows, celebrities and build your personal watchlist."
     />
+
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://cine-scope-react.vercel.app/" />
-    <meta property="og:image" content="/fabicon.svg" />
 
-  
+    <!-- 🔥 IMPORTANT: Use PNG (not svg) -->
+    <meta
+      property="og:image"
+      content="https://cine-scope-react.vercel.app/og-image.png"
+    />
+
+    <!-- 🔥 Extra OG tags (VERY IMPORTANT) -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- ✅ Twitter Card (BONUS) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="CineScope - Explore Trending Movies & TV Shows"
+    />
+    <meta
+      name="twitter:description"
+      content="Discover trending movies, TV shows, celebrities and build your watchlist."
+    />
+    <meta
+      name="twitter:image"
+      content="https://cine-scope-react.vercel.app/og-image.png"
+    />
+
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
