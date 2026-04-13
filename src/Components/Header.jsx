@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { GiFilmProjector } from "react-icons/gi";
 import { FaSearch } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 import { BsBookmarkHeartFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { MovieContext } from "./Router";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { LuLogIn } from "react-icons/lu";
 import "./Header.css";
+import { options } from "../data";
 
 const dummyPerson = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 const dummyPoster = "https://via.placeholder.com/92x138?text=No+Image";
@@ -13,6 +17,7 @@ const Header = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const navigate = useNavigate();
   const searchRef = useRef(null);
@@ -25,10 +30,9 @@ const Header = () => {
     }
 
     const delay = setTimeout(async () => {
-      const API_KEY = import.meta.env.VITE_API_KEY;
-
       const res = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`,
+        `https://api.themoviedb.org/3/search/multi?query=${query}`,
+        options,
       );
 
       const data = await res.json();
@@ -54,7 +58,8 @@ const Header = () => {
       const API_KEY = import.meta.env.VITE_API_KEY;
 
       const res = await fetch(
-        `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}`,
+        `https://api.themoviedb.org/3/genre/movie/list?language=en-US`,
+        options,
       );
 
       const data = await res.json();
@@ -140,17 +145,44 @@ const Header = () => {
         )}
       </div>
 
-      <div className="navLinks">
-        <Link to={"/watchlist"}>
+     {!menuOpen && (
+  <div className="menu-icon" onClick={() => setMenuOpen(true)}>
+    <FaBars />
+  </div>
+)}
+
+      {menuOpen && (
+        <div className="menu-overlay" onClick={() => setMenuOpen(false)}></div>
+      )}
+
+      <div className={`navLinks ${menuOpen ? "active" : ""}`}>
+        
+        {menuOpen && (
+          <div className="close-icon" onClick={() => setMenuOpen(false)}>
+            <FaTimes />
+          </div>
+        )}
+        <Link to="/profile" onClick={() => setMenuOpen(false)}>
+          <CgProfile /> Profile
+        </Link>
+        <Link to={"/watchlist"} onClick={() => setMenuOpen(false)}>
           <BsBookmarkHeartFill /> WatchList
         </Link>
 
         {user ? (
-          <button onClick={handleLogout}>Logout</button>
+          <button
+            onClick={() => {
+              handleLogout();
+              setMenuOpen(false);
+            }}
+          >
+            Logout
+          </button>
         ) : (
-          <Link to="/login">Login</Link>
+          <Link to="/login" onClick={() => setMenuOpen(false)}><LuLogIn />
+            Login
+          </Link>
         )}
-        <Link to="/profile">Profile</Link>
       </div>
     </header>
   );

@@ -26,6 +26,10 @@ body {
   font-weight: 700;
   letter-spacing: 1px;
 }
+.watchlist-section{
+  padding: 25px 30px;
+  height: 100%;
+}
 
 .toggle-buttons {
   display: flex;
@@ -44,9 +48,7 @@ body {
   transition: 0.3s;
 }
 
-/* .toggle-buttons button:hover {
-  background: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
-} */
+
 .toggle-buttons .active-btn{
   background: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
 
@@ -66,7 +68,8 @@ body {
 }
 
 .movie-card {
-  width: 200px;
+  width: 220px;
+  height: 350px;
   flex: 0 0 auto;
   background-color: #1e293b;
   border-radius: 12px;
@@ -196,4 +199,117 @@ body {
   border-radius: 50%;
   background: white;
   padding: 10px;
+}
+.watchlist-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 25px;
+  overflow: hidden !important;
+}
+.watchlist-grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Tablet (481px – 768px) ── */
+@media (max-width: 768px) {
+  .home-section {
+    padding: 24px 22px;
+  }
+
+  .home-header h2 {
+    font-size: 22px;
+  }
+
+  .movie-card {
+    width: 160px;
+    height: 330px;
+  }
+
+  .movie-card img {
+    height: 220px;
+  }
+
+  .celeb-card img {
+    width: 160px;
+    height: 160px;
+  }
+
+  .movie-grid {
+    gap: 14px;
+    padding: 14px 0;
+  }
+  .watchlist-grid{
+    grid-template-columns: repeat(auto-fill,minmax(140px,1fr)) !important;
+    gap: 14px;
+    padding: 20px;
+  }
+}
+
+/* ── Mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+  .home-section {
+    padding: 16px 14px;
+  }
+
+  .home-header {
+    /* flex-direction: column; */
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .home-header h2 {
+    font-size: 18px;
+  }
+
+  .toggle-buttons button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .movie-card {
+    width: 130px;
+    height: 250px;
+  }
+
+  .movie-card img {
+    height: 175px;
+  }
+
+  .celeb-card {
+    min-width: 120px;
+  }
+
+  .celeb-card img {
+    width: 110px;
+    height: 110px;
+  }
+
+  .movie-grid {
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .content h3 {
+    font-size: 13px;
+  }
+
+  .content p {
+    font-size: 12px;
+  }
+
+  .watchlist-icon {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    font-size: 16px;
+  }
+
+  .skeleton-poster {
+    height: 175px;
+  }
+  .watchlist-grid{
+    grid-template-columns: repeat(3,1fr) !important;
+    gap: 12px;
+  }
 }

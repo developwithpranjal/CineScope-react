@@ -2,14 +2,15 @@ import { useParams, useLocation, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { baseImageUrl } from "../data";
 import { FaStar, FaCalendarAlt, FaRegPlayCircle } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import { MovieContext } from "../Components/Router";
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import "./SingleMovie.css";
-import LocationData from "./LocationData";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
+import { options } from "../data";
 function SingleMovie() {
   const location = useLocation();
   const { id } = useParams();
@@ -23,8 +24,8 @@ function SingleMovie() {
   const [userRating, setUserRating] = useState(0);
   const [customReviews, setCustomReviews] = useState([]);
 
-  const { Location, city, error, loading, getLocation, theaters } =
-    LocationData();
+  // const { Location, city, error, loading, getLocation, theaters } =
+  //   LocationData();
   const { AddToWatchlist, RemoveFromWatchList, isInwatchlist, user } =
     useContext(MovieContext);
   const navigate = useNavigate();
@@ -34,29 +35,38 @@ function SingleMovie() {
   }, [id, isTV]);
 
   async function fetchMovie() {
-    const API_KEY = import.meta.env.VITE_API_KEY;
     const type = isTV ? "tv" : "movie";
 
-    const response = await fetch(
-      `https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`,
-    );
-    const result = await response.json();
-    setMovie(result);
-    console.log(result);
+    const movieUrl = `https://api.themoviedb.org/3/${type}/${id}`;
+    const castUrl = `https://api.themoviedb.org/3/${type}/${id}/credits`;
+    const reviewUrl = `https://api.themoviedb.org/3/${type}/${id}/reviews`;
 
-    const credits = await fetch(
-      `https://api.themoviedb.org/3/${type}/${id}/credits?api_key=${API_KEY}`,
-    );
-    const creditData = await credits.json();
+    const moviePromise = fetch(movieUrl, options);
+    const castPromise = fetch(castUrl, options);
+    const reviewPromise = fetch(reviewUrl, options);
+    const userReviewPromise = fetchCustomReviews();
 
-    setCast(creditData.cast || []);
-    const reviewRes = await fetch(
-      `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${API_KEY}`,
-    );
+    const [movieRes, castRes, reviewRes] = await Promise.all([
+      moviePromise,
+      castPromise,
+      reviewPromise,
+    ]);
 
+    const movieData = await movieRes.json();
+    const castData = await castRes.json();
     const reviewData = await reviewRes.json();
-    console.log(reviewData);
-    setReviews(reviewData.results || []);
+
+    setMovie(movieData);
+
+    const mainCast = (castData.cast || [])
+      .filter((actor) => actor.profile_path)
+      .sort((a, b) => a.order - b.order)
+      .slice(0, 30);
+
+    setCast(mainCast);
+    setReviews(reviewData.results.slice(0, 5));
+
+    await userReviewPromise;
   }
 
   async function handleTrailer() {
@@ -65,11 +75,11 @@ function SingleMovie() {
       return;
     }
 
-    const API_KEY = import.meta.env.VITE_API_KEY;
     const type = isTV ? "tv" : "movie";
 
     const res = await fetch(
-      `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`,
+      `https://api.themoviedb.org/3/${type}/${id}/videos`,
+      options,
     );
     const data = await res.json();
 
@@ -85,15 +95,13 @@ function SingleMovie() {
   async function handleSubmitReview() {
     if (!user) {
       toast.info("Login required first");
+      navigate(`/login?next=${location.pathname}`);
       return;
     }
-
-   
-
     try {
       await addDoc(collection(db, "reviews"), {
         movieId: id,
-        userName: user.email.split("@")[0].replace(/[0-9.]/g," "),
+        userName: user.email.split("@")[0].replace(/[0-9.]/g, " "),
         review: userReview,
         createdAt: new Date(),
       });
@@ -117,6 +125,10 @@ function SingleMovie() {
 
     setCustomReviews(data);
   }
+  const handleDeleteReview = (indexToDelete) => {
+    const updatedReviews = customReviews.filter((_, i) => i !== indexToDelete);
+    setCustomReviews(updatedReviews);
+  };
   function OpenForBooking(movie, city) {
     window.open(
       `https://www.google.com/search?q=${encodeURIComponent(movie + "showtimes" + city)}`,
@@ -247,38 +259,6 @@ function SingleMovie() {
                   </div>
                 )}
               </div>
-              <div className="location-box">
-                <button onClick={getLocation} className="location-btn">
-                  Find Nearest Theater
-                </button>
-
-                {loading && <p className="location-text">Loading...</p>}
-                {error && <p className="location-text">{error}</p>}
-
-                {Location && <p className="location-coords"></p>}
-
-                {city && <p className="location-text">📍 {city}</p>}
-              </div>
-              {theaters && theaters.length > 0 && (
-                <div className="theater-list">
-                  <h3>Nearby Theaters 🎬</h3>
-
-                  {theaters.slice(0, 5).map((t) => (
-                    <div key={t.id} className="theater-card">
-                      <p>
-                        <p
-                          className="theater-name"
-                          onClick={() =>
-                            OpenForBooking(movie.title || movie.name, city)
-                          }
-                        >
-                          <b>{t.tags.name || "Cinema"}</b>
-                        </p>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -334,8 +314,13 @@ function SingleMovie() {
             <div className="reviews-container">
               {customReviews.map((r, i) => (
                 <div key={i} className="review-card">
-                  <h4 className="review-author">{r.userName}</h4>
-
+                  <div className="review-header">
+                    <h4 className="review-author">{r.userName}</h4>
+                    <MdDeleteForever
+                      className="delete-icon"
+                      onClick={() => handleDeleteReview(i)}
+                    />
+                  </div>
 
                   <p className="review-content">{r.review}</p>
                 </div>
@@ -353,8 +338,6 @@ function SingleMovie() {
           value={userReview}
           onChange={(e) => setUserReview(e.target.value)}
         />
-
-        
 
         <button className="submit-review-btn" onClick={handleSubmitReview}>
           Submit Review

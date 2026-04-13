@@ -1,9 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { FaCamera } from "react-icons/fa";
 import { db, auth } from "../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Profile = () => {
   const [form, setForm] = useState({
     name: "",
@@ -12,28 +14,19 @@ const Profile = () => {
     phone: "",
     email: "",
   });
-  const [isEditing, setIsEditing] = useState(false);
-  async function handleSubmit(e) {
-    e.preventDefault();
 
-    const user = auth.currentUser;
+  const [isEditing, setIsEditing] = useState(true);
+  const [profileExists, setProfileExists] = useState(false);
+  const navigate = useNavigate();
+  const [image, setImage] = useState(
+    "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+  );
 
-    if (!user) {
-      alert("Login first");
-      return;
-    }
-
-    try {
-      await getDoc(doc(db, "users", user.uid), form);
-
-      alert("Profile Saved ✅");
-    } catch (error) {
-      console.error(error);
-    }
-  }
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
+      if (!user) {
+        return;
+      }
 
       try {
         const docRef = doc(db, "users", user.uid);
@@ -41,6 +34,11 @@ const Profile = () => {
 
         if (docSnap.exists()) {
           setForm(docSnap.data());
+          setProfileExists(true);
+          setIsEditing(false);
+        } else {
+          setProfileExists(false);
+          setIsEditing(true);
         }
       } catch (error) {
         console.error(error);
@@ -50,78 +48,96 @@ const Profile = () => {
     return () => unsubscribe();
   }, []);
 
-  const [image, setImage] = useState(
-    "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-  );
-
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   }
 
   function handleImage(e) {
     const file = e.target.files[0];
+
     if (file) {
       setImage(URL.createObjectURL(file));
     }
   }
 
   async function handleSubmit(e) {
-  if (e) e.preventDefault(); 
+    e.preventDefault();
 
-  const user = auth.currentUser;
-  if (!user) return;
+    const user = auth.currentUser;
 
-  try {
-    await setDoc(doc(db, "users", user.uid), form);
+    if (!user) {
+      toast.warning("Please login first ⚠️");
+      navigate("/login");
+      return;
+    }
+    if (!form.name || !form.phone) {
+      toast.error("Please fill all required fields");
+      return;
+    }
 
-    alert("Profile Updated ✅");
-    setIsEditing(false);
-  } catch (error) {
-    console.error(error);
+    try {
+      await setDoc(doc(db, "users", user.uid), form, { merge: true });
+
+      toast.success("Profile Saved ✅");
+
+      setIsEditing(false);
+      setProfileExists(true);
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong ❌");
+    }
   }
-}
 
   return (
     <div className="profile-wrapper">
       <div className="profile-card">
         <div className="profile-image">
           <img src={image} alt="profile" />
+
           <label className="edit-icon">
             <FaCamera />
+
             <input type="file" onChange={handleImage} hidden />
           </label>
         </div>
 
         <form onSubmit={handleSubmit}>
           <label>Name</label>
+
           <input
             type="text"
             name="name"
             placeholder="Enter name"
             value={form.name}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled={!isEditing && profileExists}
           />
 
           <label>Date of Birth</label>
+
           <input
             type="date"
             name="dob"
             value={form.dob}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled={!isEditing && profileExists}
           />
 
           <label>Gender</label>
+
           <div className="gender">
             <label>
               <input
                 type="radio"
                 name="gender"
                 value="Male"
+                checked={form.gender === "Male"}
                 onChange={handleChange}
-                disabled={!isEditing}
-              />{" "}
+                disabled={!isEditing && profileExists}
+              />
               Male
             </label>
 
@@ -130,46 +146,48 @@ const Profile = () => {
                 type="radio"
                 name="gender"
                 value="Female"
+                checked={form.gender === "Female"}
                 onChange={handleChange}
-                disabled={!isEditing}
-              />{" "}
+                disabled={!isEditing && profileExists}
+              />
               Female
             </label>
           </div>
 
           <label>Phone</label>
+
           <input
             type="text"
             name="phone"
             placeholder="+91 1234567890"
             value={form.phone}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled={!isEditing && profileExists}
           />
 
           <label>Email</label>
+
           <input
             type="email"
             name="email"
             placeholder="example@email.com"
             value={form.email}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled={!isEditing && profileExists}
           />
 
-         <button
-  type="button"
-  onClick={() => {
-    if (!isEditing) {
-      setIsEditing(true); 
-    } else {
-      handleSubmit(new Event("submit")); 
-    }
-  }}
->
-  {isEditing ? "Save Changes" : "Edit Profile"}
-</button>
-   
+          <button
+            type="button" 
+            onClick={(e) => {
+              if (isEditing) {
+                handleSubmit(e); 
+              } else {
+                setIsEditing(true);
+              }
+            }}
+          >
+            {isEditing ? "Save Changes" : "Edit Profile"}
+          </button>
         </form>
       </div>
     </div>

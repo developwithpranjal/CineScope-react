@@ -118,3 +118,47 @@
     transform: translateY(0);
   }
 }
+@media (max-width: 768px) {
+  .login-box {
+    width: 350px;
+    padding: 28px;
+  }
+
+  .logo-of-login {
+    font-size: 24px;
+  }
+
+  .login-box h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    width: 350px;
+    padding: 22px 18px;
+  }
+
+  .logo-of-login {
+    font-size: 22px;
+  }
+
+  .login-box h2 {
+    font-size: 18px;
+    margin-bottom: 18px;
+  }
+
+  .form input {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .form button {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .signup-text {
+    font-size: 13px;
+  }
+}

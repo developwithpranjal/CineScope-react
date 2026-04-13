@@ -6,7 +6,7 @@ import Footer from "./Footer";
 import { urls } from "../data";
 import WatchList from "../Pages/WatchList";
 import Login from "../Pages/Login";
-import { createContext, useState,useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import SinglePerson from "../Pages/SinglePerson";
 import PageNotFound from "../Pages/PageNotFound";
 import { ToastContainer } from "react-toastify";
@@ -17,9 +17,17 @@ import { onAuthStateChanged } from "firebase/auth";
 import ScrollToTop from "./ScrollToTop";
 import GenrePage from "../Pages/GenrePage";
 import Profile from "../Pages/Profile";
+import ProtectedRoute from "./ProtectedRoute";
 
-// import SingleCompany from "../Pages/SingleCompany";
-// import App from "../Pages/App";
+
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 export const MovieContext = createContext(null);
 
@@ -27,26 +35,36 @@ function Router() {
   const [Watchlist, setWatchList] = useState([]);
   const [user, setUser] = useState(null);
 
-useEffect(() => {
-  const unsub = onAuthStateChanged(auth, (u) => {
-    setUser(u);
-  });
-  return () => unsub();
-}, []);
-
-  function AddToWatchlist(movieToAdd) {
-    const exists = Watchlist.find((item) => item.id === movieToAdd.id);
-    if (!exists) {
-      setWatchList([...Watchlist, movieToAdd]);
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsub();
+  }, []);
+  useEffect(() => {
+    if (!user) {
+      setWatchList([]);
+      return;
     }
+
+    const colRef = collection(db, "watchlists", user.uid, "movies-shows");
+    const unsub = onSnapshot(colRef, (snapshot) => {
+      const movies = snapshot.docs.map((doc) => doc.data());
+      setWatchList(movies);
+    });
+
+    return () => unsub();
+  }, [user]);
+  async function AddToWatchlist(MovieToAdd) {
+    const docId = `${MovieToAdd.media_type || (MovieToAdd.first_air_date ? "tv" : "movie")}_${MovieToAdd.id}`;
+    const docRef = doc(db, "watchlists", user.uid, "movies-shows", docId);
+    await setDoc(docRef, MovieToAdd);
   }
-  function RemoveFromWatchList(MovieToRemove) {
-    console.log(MovieToRemove);
-    setWatchList(
-      Watchlist.filter((item) => {
-        return item.id !== MovieToRemove;
-      }),
-    );
+  async function RemoveFromWatchList(IdToRemove) {
+    const found = Watchlist.find((item) => item.id === IdToRemove);
+    const docId = `${found.media_type || (found.first_air_date ? "tv" : "movie")}_${IdToRemove}`;
+    const docRef = doc(db, "watchlists", user.uid, "movies-shows", docId);
+    await deleteDoc(docRef);
   }
   function isInwatchlist(id) {
     return Watchlist.some((item) => item.id === id);
@@ -74,7 +92,7 @@ useEffect(() => {
         }}
       >
         <Header />
-        <ScrollToTop/>
+        <ScrollToTop />
 
         <Routes>
           <Route
@@ -119,11 +137,25 @@ useEffect(() => {
 
           <Route path="/movie/:id" element={<SingleMovie />} />
           <Route path="/tv/:id" element={<SingleMovie />} />
-          <Route path="/watchlist" element={<WatchList />} />
+          <Route
+            path="/watchlist"
+            element={
+              <ProtectedRoute>
+                <WatchList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/person/:id" element={<SinglePerson />} />
           <Route path="/genre/:id" element={<GenrePage />} />
-          <Route path="/profile" element={<Profile/>} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
 
@@ -135,6 +167,7 @@ useEffect(() => {
           newestOnTop
           closeOnClick
           pauseOnHover={false}
+          
         />
       </MovieContext.Provider>
     </BrowserRouter>

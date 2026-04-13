@@ -295,25 +295,244 @@ background-color: #020617;
   height: 40px;
   margin-top: 15px;
 }
-.theater-list {
-  margin-top: 20px;
- 
+
+.reviews-wrapper {
+  padding: 30px;
+  color: #fff;
 }
 
-.theater-card {
-  background: #1e293b;
-  padding: 3px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  border: 1.5px solid #facc15;
-  margin-top: 15px;
-  transition: all 0.3s ease;
+.reviews-heading {
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  border-left: 4px solid #e50914;
+  padding-left: 10px;
 }
-.theater-card p{
-    padding: 5px 150px 5px 5px;
-    cursor: pointer;
+
+.reviews-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
 }
-.theater-card:hover{
-    background-color:#192334;
-    transform: translateY(-3px);
+
+.review-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 15px;
+  backdrop-filter: blur(10px);
+  transition: 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+.review-card h4 {
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #fff;
+}
+
+.review-card p {
+  font-size: 14px;
+  color: #ccc;
+  margin: 5px 0;
+}
+
+.review-content {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #bbb;
+}
+
+.no-reviews {
+  color: #888;
+  font-style: italic;
+}
+
+.custom-reviews-list {
+  margin-top: 40px;
+}
+
+.custom-review-section {
+  margin-top: 40px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.review-textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  resize: none;
+  margin-bottom: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 14px;
+}
+
+.submit-review-btn {
+  padding: 10px 20px;
+  background: #e50914;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.submit-review-btn:hover {
+  background: #ff1f1f;
+  transform: scale(1.05);
+}
+.delete-icon {
+  color: #ff4d4d;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+  transition: 0.2s ease;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+  color: #ff1a1a;
+}
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.review-author {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.delete-icon {
+  color: #ff4d4d;
+  cursor: pointer;
+  font-size: 20px;
+  transition: 0.2s ease;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+  color: #ff1a1a;
+}
+
+.review-content {
+  font-size: 14px;
+  color: #bbb;
+  line-height: 1.5;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .reviews-wrapper {
+    padding: 15px;
+  }
+
+  .reviews-heading {
+    font-size: 20px;
+  }
+}
+@media (max-width: 768px) {
+
+  .movie_container {
+    flex-direction: column; /* side by side → top bottom */
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .movie-left img {
+    width: 100%;
+    max-width: 250px;
+    margin: auto;
+    display: block;
+  }
+
+  .movie-right h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .movie-description {
+    padding: 20px;
+  }
+
+  .movie-info p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Buttons full width */
+  .movie-info button {
+    width: 100%;
+    max-width: 100%;
+    margin: 10px 0;
+  }
+
+  .WatchListBtn {
+    margin-left: 0;
+  }
+
+  /* Trailer */
+  .trailer-box {
+    width: 95%;
+  }
+
+  /* Cast section */
+  .cast-wrapper {
+    padding: 0 15px;
+  }
+
+  .cast-card {
+    width: 130px;
+  }
+
+  .cast-card img {
+    height: 160px;
+  }
+}
+@media (max-width: 480px) {
+
+  .single-movie {
+    padding: 20px 10px;
+  }
+
+  .movie_container {
+    padding: 15px;
+  }
+
+  .movie-right h1 {
+    font-size: 18px;
+  }
+
+  .movie-info span {
+    font-size: 16px;
+  }
+
+  .movie-info p {
+    font-size: 13px;
+  }
+
+  .cast-card {
+    width: 110px;
+  }
+
+  .cast-card img {
+    height: 140px;
+  }
+  
 }

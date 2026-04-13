@@ -4,13 +4,16 @@ import { GiFilmProjector } from "react-icons/gi";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [searchParams] = useSearchParams()
   const [confirmPassword, setConfirmPassword] = useState("");
+  const pendingMovie = location.state?.pendingMovie || null;
+  const nextPath = searchParams.get("next") || "/";
   const navigate = useNavigate();
   async function handleSignup(email, password) {
     if (password !== confirmPassword) {
@@ -20,8 +23,11 @@ const Login = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      if (pendingMovie) {
+        AddToWatchlist(pendingMovie);
+      }
       alert("Signup successful ✅");
-      navigate("/");
+      navigate(nextPath);
     } catch (err) {
       alert(err.message);
     }
@@ -30,9 +36,12 @@ const Login = () => {
   async function handleLogin(email, password) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      if (pendingMovie) {
+        AddToWatchlist(pendingMovie);
+      }
 
       alert("Login successful ✅");
-      navigate("/");
+      navigate(nextPath);
     } catch (err) {
       alert(err.message);
     }

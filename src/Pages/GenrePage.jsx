@@ -1,91 +1,159 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { baseImageUrl } from "../data";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { baseImageUrl, options } from "../data";
 import "./GenrePage.css";
+import { MovieContext } from "../Components/Router";
+import { FaCheck, FaPlus } from "react-icons/fa";
+import { toast } from "react-toastify";
+
 const GenrePage = () => {
   const { id } = useParams();
-  const [movies, setMovies] = useState([]);
+  const [content, setContent] = useState([]);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const observer = useRef();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { AddToWatchlist, RemoveFromWatchList, isInwatchlist, user } =
+    useContext(MovieContext);
+
   useEffect(() => {
-    async function fetchMovies() {
+    setContent([]);
+    setPage(1);
+  }, [id]);
+
+  useEffect(() => {
+    async function fetchContent() {
       try {
         setLoading(true);
-
-        const API_KEY = import.meta.env.VITE_API_KEY;
-
-        const res = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${id}&page=${page}`,
-        );
-
-        const data = await res.json();
-
-        setMovies((prev) => [...prev, ...(data.results || [])]);
+        const [movieRes, tvRes] = await Promise.all([
+          fetch(
+            `https://api.themoviedb.org/3/discover/movie?with_genres=${id}&page=${page}`,
+            options,
+          ),
+          fetch(
+            `https://api.themoviedb.org/3/discover/tv?with_genres=${id}&page=${page}`,
+            options,
+          ),
+        ]);
+        const movieData = await movieRes.json();
+        const tvData = await tvRes.json();
+        const movies =
+          movieData.results?.map((m) => ({ ...m, media_type: "movie" })) || [];
+        const tv =
+          tvData.results?.map((t) => ({ ...t, media_type: "tv" })) || [];
+        const combined = [...movies, ...tv].filter((item) => {
+          if (item.adult === true) return false;
+          const title = (item.title || item.name || "").toLowerCase();
+          const adultWords = [
+            "xxx",
+            "erotic",
+            "nude",
+            "porn",
+            "sex",
+            "hot",
+            "cock",
+            "dick",
+            "pussy",
+          ];
+          if (adultWords.some((word) => title.includes(word))) return false;
+          return true;
+        });
+        setContent((prev) => {
+          const merged = [...prev, ...combined];
+          const unique = merged.filter(
+            (item, index, self) =>
+              index ===
+              self.findIndex(
+                (t) => t.id === item.id && t.media_type === item.media_type,
+              ),
+          );
+          return unique;
+        });
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     }
-
-    fetchMovies();
+    fetchContent();
   }, [id, page]);
-  useEffect(() => {
-    setMovies([]);
-    setPage(1);
-  }, [id]);
+
+  const lastElementRef = (node) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !loading) {
+        setPage((prev) => prev + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  };
 
   return (
     <div className="genre-container">
-      <h2>Movies</h2>
-
+      <h2>Movies & TV Shows</h2>
       <div className="genre-grid">
-  {/* 🔹 FIRST LOAD SKELETON */}
-  {loading && page === 1 &&
-    Array(12)
-      .fill(0)
-      .map((_, i) => (
-        <div className="film-card" key={i}>
-          <div className="skeleton skeleton-img"></div>
-          <div className="film-info">
-            <div className="skeleton skeleton-text"></div>
-            <div className="skeleton skeleton-text"></div>
-            <div className="skeleton skeleton-text small"></div>
+        {content.map((item, index) => (
+          <div
+            className="film-card"
+            key={`${item.media_type}-${item.id}`}
+            ref={content.length === index + 1 ? lastElementRef : null}
+          >
+            <div className="genre-img-wrapper">
+              <Link to={`/${item.media_type}/${item.id}`}>
+                <img
+                  src={
+                    item.poster_path
+                      ? `${baseImageUrl}${item.poster_path}`
+                      : "https://via.placeholder.com/300x450?text=No+Image"
+                  }
+                  alt={item.title || item.name}
+                />
+              </Link>
+              <button
+                className={
+                  isInwatchlist(item.id)
+                    ? "genre-imdb-btn-added"
+                    : "genre-imdb-btn"
+                }
+                onClick={async (e) => {
+                  e.preventDefault();
+                  if (!user) {
+                    toast.warning("Please login first ⚠️");
+                    navigate(`/login?next=${location.pathname}`, {
+                      state: { pendingMovie: item },
+                    });
+                    return;
+                  }
+                  if (isInwatchlist(item.id)) {
+                    await RemoveFromWatchList(item.id);
+                  } else {
+                    await AddToWatchlist(item);
+                  }
+                }}
+              >
+                {isInwatchlist(item.id) ? <FaCheck /> : <FaPlus />}
+              </button>
+            </div>
+            <div className="film-info">
+              <h3>{item.title || item.name}</h3>
+              <p>
+                {item.release_date || item.first_air_date
+                  ? new Date(
+                      item.release_date || item.first_air_date,
+                    ).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "2-digit",
+                    })
+                  : ""}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
-
-  {movies.map((movie,index) => (
-    <div className="film-card" key={index}>
-      <Link to={`/movie/${movie.id}`}>
-        <img
-          src={
-            movie.poster_path
-              ? `${baseImageUrl}${movie.poster_path}`
-              : "https://via.placeholder.com/300x450?text=No+Image"
-          }
-          alt={movie.title}
-        />
-      </Link>
-
-      <div className="film-info">
-        <p>{movie.title}</p>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
-      {
-        <div className="show-more-container">
-  <button
-    className="show-more-btn"
-    disabled={loading}
-    onClick={() => setPage((prev) => prev + 1)}
-  >
-    {loading && page > 1 ? "Loading..." : "Show More"}
-  </button>
-</div>
-      }
+      {loading && <p className="loading">Loading more...</p>}
     </div>
   );
 };

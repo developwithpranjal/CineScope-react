@@ -15,10 +15,10 @@ const WatchList = () => {
   }
 
   return (
-    <div className="home-section">
+    <div className="watchlist-section">
       <h2>Your WatchList ({Watchlist.length })</h2>
 
-      <div className="movie-grid">
+      <div className="movie-grid watchlist-grid">
         {Watchlist.length > 0 ? (
           Watchlist.map((item) => {
             const isTV = item.name !== undefined;

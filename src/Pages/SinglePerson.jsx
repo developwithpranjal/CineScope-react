@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { baseImageUrl } from "../data";
+import { options } from "../data";
 import "./SinglePerson.css";
 
 function SinglePerson() {
@@ -10,19 +11,25 @@ function SinglePerson() {
   const [visibleCount, setVisibleCount] = useState(10);
   useEffect(() => {
     async function fetchPerson() {
-      const API_KEY = import.meta.env.VITE_API_KEY;
+      const personURL = `https://api.themoviedb.org/3/person/${id}`;
 
-      const res = await fetch(
-        `https://api.themoviedb.org/3/person/${id}?api_key=${API_KEY}`,
-      );
-      const data = await res.json();
-      setPerson(data);
+      const movieURL = `https://api.themoviedb.org/3/person/${id}/movie_credits`;
 
-      const movieRes = await fetch(
-        `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${API_KEY}`,
-      );
-      const movieData = await movieRes.json();
-      setMovies(movieData.cast || []);
+      try {
+        const [personRes, movieRes] = await Promise.all([
+          fetch(personURL, options),
+          fetch(movieURL, options),
+        ]);
+
+        const personData = await personRes.json();
+        const movieData = await movieRes.json();
+
+        setPerson(personData);
+
+        setMovies(movieData.cast || []);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     fetchPerson();
@@ -106,13 +113,14 @@ function SinglePerson() {
       <div className="movies-section">
         <h2> Top Movies</h2>
 
-        <div className="movies-grid">
+        <div className="sp-movies-grid">
           {movies.length > 0 ? (
             movies
+              .filter((m) => m.poster_path)
               .sort((a, b) => b.popularity - a.popularity)
               .slice(0, visibleCount)
               .map((movie) => (
-                <div key={movie.id} className="movie-card">
+                <div key={movie.id} className="sp-movie-card">
                   {movie.poster_path && (
                     <Link to={`/movie/${movie.id}`}>
                       <img
