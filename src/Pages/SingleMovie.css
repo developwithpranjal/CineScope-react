@@ -392,42 +392,20 @@ background-color: #020617;
   background: #ff1f1f;
   transform: scale(1.05);
 }
-.delete-icon {
-  color: #ff4d4d;
-  cursor: pointer;
-  margin-left: 10px;
-  font-size: 18px;
-  transition: 0.2s ease;
-}
 
-.delete-icon:hover {
-  transform: scale(1.2);
-  color: #ff1a1a;
-}
 .review-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
-
 .review-author {
   font-size: 16px;
   font-weight: 600;
   color: #fff;
 }
 
-.delete-icon {
-  color: #ff4d4d;
-  cursor: pointer;
-  font-size: 20px;
-  transition: 0.2s ease;
-}
 
-.delete-icon:hover {
-  transform: scale(1.2);
-  color: #ff1a1a;
-}
 
 .review-content {
   font-size: 14px;
@@ -437,7 +415,113 @@ background-color: #020617;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+.edit-del-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
+  margin-left: auto;
+
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 8px;
+  border-radius: 8px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* common icon style */
+.edit-del-icon svg {
+  font-size: 16px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+
+.delete-icon {
+  color: #ff4d4d;
+}
+
+.delete-icon:hover {
+  background: rgba(255, 77, 77, 0.15);
+  transform: scale(1.15);
+}
+
+.edit-review {
+  color: #3b82f6;
+}
+
+.edit-review:hover {
+  background: rgba(59, 130, 246, 0.15);
+  transform: scale(1.15);
+}
+.provider-section {
+  margin-top: 20px;
+}
+
+.provider-list {
+  display: flex;
+  flex-wrap: wrap;
+  /* flex-direction: column; */
+  gap: 10px;
+}
+.provider-section h2 {
+  font-size: 25px;
+  margin-bottom: 18px;
+  color: #f5c518;
+}
+
+.provider-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  /* background: rgba(255, 255, 255, 0.05); */
+  text-decoration: none;
+  color: white;
+  /* flex: 1 1 160px; */
+  /* min-width: 140px; */
+  max-width: 220px;
+
+  transition: 0.2s ease;
+}
+
+.provider-item img {
+  width: 35px;
+  height: 35px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.provider-item span {
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-provider {
+  color: darkred;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
 @media (max-width: 600px) {
   .reviews-wrapper {
     padding: 15px;
@@ -504,6 +588,19 @@ background-color: #020617;
   .cast-card img {
     height: 160px;
   }
+  /* 📲 TABLET */
+
+  .edit-del-icon {
+    gap: 10px;
+    padding: 5px 7px;
+  }
+
+  .edit-del-icon svg {
+    width: 26px;
+    height: 26px;
+    font-size: 15px;
+  
+}
 }
 @media (max-width: 480px) {
 
@@ -534,5 +631,17 @@ background-color: #020617;
   .cast-card img {
     height: 140px;
   }
-  
+ 
+  .edit-del-icon {
+    gap: 8px;
+    padding: 4px 6px;
+  }
+
+  .edit-del-icon svg {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+
+
 }

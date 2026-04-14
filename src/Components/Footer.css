@@ -52,6 +52,7 @@
   letter-spacing: 1.2px;
   color: #64748b;
   margin: 0 0 16px;
+  /* display: block; */
 }
 
 .footer-col a {
@@ -87,11 +88,16 @@
   text-decoration: none;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
+.social-icons a{
+    
+    display: flex;
+    align-items: center;
+}
 
 .social-icon:hover {
   border-color: #facc15;
   color: #facc15;
-  background: rgba(250, 204, 21, 0.08);
+  /* background: rgba(250, 204, 21, 0.08); */
 }
 
 .footer-bottom {

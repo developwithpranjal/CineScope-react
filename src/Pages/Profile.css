@@ -82,7 +82,7 @@
   transition: 0.3s;
 }
 
-button:hover {
+.profilebtn button:hover {
   background: #eab308;
 }
 @media (max-width: 768px) {

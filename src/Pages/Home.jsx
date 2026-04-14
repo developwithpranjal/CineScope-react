@@ -92,9 +92,9 @@ function Home({ urls, heading, btn1, btn2 }) {
               {(item.poster_path || item.profile_path) && (
                 <Link
                   to={
-                    isPerson
+                    item.media_type === "person"
                       ? `/person/${item.id}`
-                      : `/${isTV ? "tv" : "movie"}/${item.id}`
+                      : `/${item.media_type || (item.first_air_date ? "tv" : "movie")}/${item.id}`
                   }
                 >
                   <img

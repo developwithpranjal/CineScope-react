@@ -176,7 +176,7 @@ const Profile = () => {
             disabled={!isEditing && profileExists}
           />
 
-          <button
+          <button className="profilebtn"
             type="button" 
             onClick={(e) => {
               if (isEditing) {

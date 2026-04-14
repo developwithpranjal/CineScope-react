@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../Pages/Home";
 import SingleMovie from "../Pages/SingleMovie";
 import Header from "./Header";
@@ -18,7 +18,7 @@ import ScrollToTop from "./ScrollToTop";
 import GenrePage from "../Pages/GenrePage";
 import Profile from "../Pages/Profile";
 import ProtectedRoute from "./ProtectedRoute";
-
+import OnboardingPopup from "./OnboardingPopup";
 
 import {
   doc,
@@ -34,10 +34,12 @@ export const MovieContext = createContext(null);
 function Router() {
   const [Watchlist, setWatchList] = useState([]);
   const [user, setUser] = useState(null);
-
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
+      setLoading(false)
     });
     return () => unsub();
   }, []);
@@ -78,99 +80,103 @@ function Router() {
         alert(error.message);
       });
   }
+  useEffect(() => {
+    if (user && location.state?.pendingMovie) {
+      AddToWatchlist(location.state.pendingMovie);
+    }
+  }, [user]);
   return (
-    <BrowserRouter>
-      <MovieContext.Provider
-        value={{
-          Watchlist,
-          setWatchList,
-          AddToWatchlist,
-          RemoveFromWatchList,
-          isInwatchlist,
-          handleLogout,
-          user,
-        }}
-      >
-        <Header />
-        <ScrollToTop />
+    <MovieContext.Provider
+      value={{
+        Watchlist,
+        setWatchList,
+        AddToWatchlist,
+        RemoveFromWatchList,
+        isInwatchlist,
+        handleLogout,
+        user,
+        loading,
+      }}
+    >
+      <Header />
+      <OnboardingPopup/>
+      <ScrollToTop />
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <Home
-                  heading="Trending Movies"
-                  btn1="Day"
-                  btn2="Week"
-                  urls={[urls.trendingByDay, urls.trendingByWeek]}
-                />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div>
+              <Home
+                heading="Trending Movies"
+                btn1="Day"
+                btn2="Week"
+                urls={[urls.trendingByDay, urls.trendingByWeek]}
+              />
 
-                <Home
-                  heading="Popular Movies"
-                  btn1="Movies"
-                  btn2="TV Shows"
-                  urls={[urls.popularMovies, urls.popularTVShows]}
-                />
-                <Home
-                  heading="Popular Cast"
-                  btn1="Movies"
-                  btn2="TV Shows "
-                  urls={[urls.popularCast, urls.popularCast]}
-                />
+              <Home
+                heading="Popular Movies"
+                btn1="Movies"
+                btn2="TV Shows"
+                urls={[urls.popularMovies, urls.popularTVShows]}
+              />
+              <Home
+                heading="Popular Cast"
+                btn1="Movies"
+                btn2="TV Shows "
+                urls={[urls.popularCast, urls.popularCast]}
+              />
 
-                <Home
-                  heading="Top Rated Movies"
-                  btn1="Movies"
-                  btn2="TV Shows"
-                  urls={[urls.topRatedMovies, urls.topRatedTVShows]}
-                />
-                <Home
-                  heading="UpComing Movies"
-                  btn1="Movies"
-                  btn2="TV Shows"
-                  urls={[urls.upcomingMovies, urls.upcomingTVShows]}
-                />
-              </div>
-            }
-          />
-
-          <Route path="/movie/:id" element={<SingleMovie />} />
-          <Route path="/tv/:id" element={<SingleMovie />} />
-          <Route
-            path="/watchlist"
-            element={
-              <ProtectedRoute>
-                <WatchList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/person/:id" element={<SinglePerson />} />
-          <Route path="/genre/:id" element={<GenrePage />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-
-        <Footer />
-        <ToastContainer
-          position="bottom-right"
-          autoClose={2000}
-          theme="dark"
-          newestOnTop
-          closeOnClick
-          pauseOnHover={false}
-          
+              <Home
+                heading="Top Rated Movies"
+                btn1="Movies"
+                btn2="TV Shows"
+                urls={[urls.topRatedMovies, urls.topRatedTVShows]}
+              />
+              <Home
+                heading="UpComing Movies"
+                btn1="Movies"
+                btn2="TV Shows"
+                urls={[urls.upcomingMovies, urls.upcomingTVShows]}
+              />
+            </div>
+          }
         />
-      </MovieContext.Provider>
-    </BrowserRouter>
+
+        <Route path="/movie/:id" element={<SingleMovie />} />
+        <Route path="/tv/:id" element={<SingleMovie />} />
+        <Route
+          path="/watchlist"
+          element={
+            <ProtectedRoute>
+              <WatchList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/person/:id" element={<SinglePerson />} />
+        <Route path="/genre/:id" element={<GenrePage />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+
+      <Footer />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        theme="dark"
+        newestOnTop
+        closeOnClick
+        pauseOnHover={false}
+      />
+    </MovieContext.Provider>
   );
 }
 

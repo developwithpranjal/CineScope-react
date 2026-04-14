@@ -5,11 +5,13 @@ import { FaStar, FaCalendarAlt, FaRegPlayCircle } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { MovieContext } from "../Components/Router";
 import { BsBookmarkPlusFill } from "react-icons/bs";
+import { MdEdit } from "react-icons/md";
 import "./SingleMovie.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { options } from "../data";
 function SingleMovie() {
   const location = useLocation();
@@ -23,9 +25,9 @@ function SingleMovie() {
   const [userReview, setUserReview] = useState("");
   const [userRating, setUserRating] = useState(0);
   const [customReviews, setCustomReviews] = useState([]);
-
-  // const { Location, city, error, loading, getLocation, theaters } =
-  //   LocationData();
+  const [providers, setProviders] = useState([]);
+  const [providerLink, setProviderLink] = useState("");
+  const [editingId, setEditingId] = useState(null);
   const { AddToWatchlist, RemoveFromWatchList, isInwatchlist, user } =
     useContext(MovieContext);
   const navigate = useNavigate();
@@ -40,22 +42,33 @@ function SingleMovie() {
     const movieUrl = `https://api.themoviedb.org/3/${type}/${id}`;
     const castUrl = `https://api.themoviedb.org/3/${type}/${id}/credits`;
     const reviewUrl = `https://api.themoviedb.org/3/${type}/${id}/reviews`;
-
+    const providerUrl = `https://api.themoviedb.org/3/${type}/${id}/watch/providers`;
     const moviePromise = fetch(movieUrl, options);
     const castPromise = fetch(castUrl, options);
     const reviewPromise = fetch(reviewUrl, options);
     const userReviewPromise = fetchCustomReviews();
+    const providerPromise = fetch(providerUrl, options);
 
-    const [movieRes, castRes, reviewRes] = await Promise.all([
+    const [movieRes, castRes, reviewRes, providerRes] = await Promise.all([
       moviePromise,
       castPromise,
       reviewPromise,
+      providerPromise,
     ]);
 
     const movieData = await movieRes.json();
     const castData = await castRes.json();
     const reviewData = await reviewRes.json();
+    const providerData = await providerRes.json();
+    const indiaProviders = providerData.results?.IN;
 
+    if (indiaProviders) {
+      setProviderLink(indiaProviders.link);
+
+      if (indiaProviders.flatrate) {
+        setProviders(indiaProviders.flatrate);
+      }
+    }
     setMovie(movieData);
 
     const mainCast = (castData.cast || [])
@@ -93,12 +106,21 @@ function SingleMovie() {
     }
   }
   async function handleSubmitReview() {
-    if (!user) {
-      toast.info("Login required first");
-      navigate(`/login?next=${location.pathname}`);
-      return;
-    }
-    try {
+  if (!user) {
+    toast.info("Login required first");
+    navigate(`/login?next=${location.pathname}`);
+    return;
+  }
+
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, "reviews", editingId), {
+        review: userReview,
+      });
+
+      toast.success("Review updated ✏️");
+      setEditingId(null);
+    } else {
       await addDoc(collection(db, "reviews"), {
         movieId: id,
         userName: user.email.split("@")[0].replace(/[0-9.]/g, " "),
@@ -107,34 +129,36 @@ function SingleMovie() {
       });
 
       toast.success("Review Added ✅");
-
-      setUserReview("");
-      setUserRating(0);
-
-      fetchCustomReviews();
-    } catch (err) {
-      console.log(err);
     }
+
+    setUserReview("");
+    fetchCustomReviews();
+  } catch (err) {
+    console.log(err);
   }
+}
   async function fetchCustomReviews() {
     const snapshot = await getDocs(collection(db, "reviews"));
 
     const data = snapshot.docs
-      .map((doc) => doc.data())
+      .map((doc) => ({
+        id: doc.id, // ✅ IMPORTANT
+        ...doc.data(),
+      }))
       .filter((r) => r.movieId === id);
 
     setCustomReviews(data);
   }
-  const handleDeleteReview = (indexToDelete) => {
-    const updatedReviews = customReviews.filter((_, i) => i !== indexToDelete);
-    setCustomReviews(updatedReviews);
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await deleteDoc(doc(db, "reviews", reviewId)); // ✅ Firebase delete
+      setCustomReviews((prev) => prev.filter((r) => r.id !== reviewId));
+      toast.success("Review deleted 🗑️");
+    } catch (err) {
+      console.log(err);
+    }
   };
-  function OpenForBooking(movie, city) {
-    window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(movie + "showtimes" + city)}`,
-      "_blank",
-    );
-  }
+
   if (!movie) {
     return (
       <div className="single-movie">
@@ -212,6 +236,30 @@ function SingleMovie() {
                     ?.map((e) => e.english_name)
                     .join(", ") || "N/A"}
                 </p>
+                <div className="provider-section">
+                  <h2>Available On</h2>
+
+                  {providers.length > 0 ? (
+                    <div className="provider-list">
+                      {providers.map((p) => (
+                        <a
+                          key={p.provider_id}
+                          href={providerLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="provider-item"
+                        >
+                          <img
+                            src={`https://image.tmdb.org/t/p/w200${p.logo_path}`}
+                            alt={p.provider_name}
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="no-provider">Not on streaming yet 🍿</p>
+                  )}
+                </div>
 
                 <button className="TrailerBtn" onClick={handleTrailer}>
                   <FaRegPlayCircle />{" "}
@@ -312,14 +360,25 @@ function SingleMovie() {
             <p className="no-reviews">No user reviews yet 😢</p>
           ) : (
             <div className="reviews-container">
-              {customReviews.map((r, i) => (
-                <div key={i} className="review-card">
+              {customReviews.map((r) => (
+                <div key={r.id} className="review-card">
                   <div className="review-header">
                     <h4 className="review-author">{r.userName}</h4>
-                    <MdDeleteForever
+                    
+                    <div className="edit-del-icon">
+                      <MdDeleteForever
                       className="delete-icon"
-                      onClick={() => handleDeleteReview(i)}
+                      onClick={() => handleDeleteReview(r.id)}
                     />
+                    <MdEdit
+                      className="edit-review"
+                      onClick={() => {
+                        setUserReview(r.review);
+                        setEditingId(r.id);
+                      }}
+                    />
+                    </div>
+                    
                   </div>
 
                   <p className="review-content">{r.review}</p>
@@ -340,7 +399,7 @@ function SingleMovie() {
         />
 
         <button className="submit-review-btn" onClick={handleSubmitReview}>
-          Submit Review
+          Post Review
         </button>
       </div>
     </>
