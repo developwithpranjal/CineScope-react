@@ -1,4 +1,3 @@
-/* ===== ROOT COLORS ===== */
 :root {
   --bg-dark: #0f0f0f;
   --card-dark: #1a1a1a;
@@ -8,7 +7,6 @@
   --text-muted: #b0b0b0;
 }
 
-/* ===== OVERLAY ===== */
 .onboarding-overlay {
   position: fixed;
   top: 0;
@@ -24,13 +22,12 @@
   padding: 15px;
 }
 
-/* ===== MODAL ===== */
 .onboarding-modal {
   background: var(--card-dark);
   color: var(--text-light);
   width: 100%;
   max-width: 550px;
-  max-height: 90vh; /* 🔥 scroll safe */
+  max-height: 90vh; 
   overflow-y: auto;
   border-radius: 16px;
   padding: 20px;
@@ -38,7 +35,6 @@
   animation: fadeIn 0.4s ease;
 }
 
-/* ===== HEADER ===== */
 .modal-header {
   display: flex;
   align-items: center;
@@ -67,7 +63,6 @@
   transform: scale(1.2);
 }
 
-/* ===== STEP ===== */
 .step {
   margin-top: 20px;
   text-align: center;
@@ -79,7 +74,6 @@
   font-size: 0.95rem;
 }
 
-/* ===== BUTTONS ===== */
 .gender-buttons {
   display: flex;
   gap: 12px;
@@ -105,14 +99,12 @@
   box-shadow: 0 0 10px rgba(255, 213, 79, 0.5);
 }
 
-/* ===== GRID ===== */
 .actors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 15px;
 }
 
-/* ===== ACTOR CARD ===== */
 .actor-card {
   background: #111;
   border-radius: 14px;
@@ -210,7 +202,7 @@
   }
 
   .actors-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
